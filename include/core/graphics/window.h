@@ -2,9 +2,14 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <map>
 
 #define WINDOW_CREATION_FAILED 1
 #define WINDOW_DESTROYED 2
+
+class Window;
+
+typedef void(*ResizeCallback)(Window*, int,int);
 
 struct WindowConfiguration {
 	std::string title = "Default window name";
@@ -30,6 +35,8 @@ public:
 	GLFWwindow* windowHandle;
 	uint16_t status;
 
+	ResizeCallback resizeCallback = nullptr;
+
 	Window(WindowConfiguration);
 	~Window(); //calls destroy
 
@@ -53,5 +60,7 @@ public:
 	void destroy();//deletes this window (glfwDestroyWindow)
 
 private:
+	static std::map<GLFWwindow*, Window*> handleToPtr;
 	static void resize(GLFWwindow* handle, int width, int height);
 };
+

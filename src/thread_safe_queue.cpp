@@ -1,4 +1,4 @@
-#include "thread_safe_queue.h"
+#include "../include/core/threads/thread_safe_queue.h"
 
 template<typename T>
 void SharedQueue<T>::setMaxSize(int size)

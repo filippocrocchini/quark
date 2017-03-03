@@ -2,6 +2,10 @@
 
 void render();
 
+void resize(Window* window, int width, int height) {
+	std::fprintf(stdout, "%s, It worked!\n", window->config.title.c_str());
+}
+
 int main() {
 	if (!glfwInit()) {
 		std::fprintf(stderr, "Failed to initialize GLFW.\n");
@@ -9,9 +13,6 @@ int main() {
 	} else {
 		WindowConfiguration windowConfig;
 		windowConfig.title = "Window test";
-		windowConfig.fullscreen = false;
-		windowConfig.width = 1920;
-		windowConfig.height = 1080;
 
 		Window window(windowConfig);
 		window.create();
@@ -20,6 +21,8 @@ int main() {
 			std::fprintf(stderr, "Failed to open the window.\n");
 			return -1;
 		}
+
+		window.resizeCallback = resize;
 
 		window.bindContext();
 

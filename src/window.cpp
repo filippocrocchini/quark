@@ -1,5 +1,7 @@
 #include "../include/core/graphics/window.h"
 
+std::map<GLFWwindow*, Window*> Window::handleToPtr;
+
 Window::Window(WindowConfiguration config){
 	this->config = config;
 }
@@ -95,14 +97,25 @@ void Window::create() {
 			glfwSwapInterval(0);
 	}
 	releaseContext();
+
+	handleToPtr[windowHandle] = this;
 }
 
 void Window::destroy(){
 	glfwDestroyWindow(windowHandle);
+	handleToPtr.erase(windowHandle);
 }
 
 void Window::resize(GLFWwindow* handle, int width, int height){
-	std::fprintf(stdout, "Resized -> width: %d, height: %d\n", width, height);
+	Window* window;
+	try {
+		window = handleToPtr[handle];
+	}
+	catch (std::out_of_range e) {
+		return;
+	}
+	if (window != nullptr) {
+		if(window->resizeCallback != nullptr)
+			window->resizeCallback(window, width, height);
+	}
 }
-/*
-*/
