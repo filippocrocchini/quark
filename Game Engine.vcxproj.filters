@@ -1,12 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\threadpool.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\thread_safe_queue.cpp" />
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\thread_safe_queue.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\threadpool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\thread_safe_queue.h" />
-    <ClInclude Include="include\threadpool.h" />
+    <ClInclude Include="include\core\graphics\window.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\managers\input.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\managers\render.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\threads\renderer.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\threads\thread_safe_queue.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\threads\threadpool.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\managers\update.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\threads\updater.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{cd42144b-067a-4c20-b208-75a55ecc2411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{32b7bc29-e043-4b27-8cbb-99228f5317f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#include "../include/threadpool.h"
+#include "threadpool.h"
 #include "thread_safe_queue.cpp"
 
 #include <iostream>
