@@ -11,6 +11,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\engine.cpp" />
+    <ClCompile Include="src\update.cpp" />
+    <ClCompile Include="src\render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\graphics\window.h">
@@ -25,9 +28,6 @@
     <ClInclude Include="include\core\managers\render.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\threads\renderer.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\threads\thread_safe_queue.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -35,9 +35,6 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\core\managers\update.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\threads\updater.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

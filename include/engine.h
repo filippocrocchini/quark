@@ -1,24 +1,30 @@
 #pragma once
 
+#include <atomic>
+#include <mutex>
+
 #include "core\managers\render.h"
 #include "core\managers\update.h"
 #include "core\managers\input.h"
 
 struct EngineConfiguration {
-	WindowConfiguration winodowConfiguration;
+	WindowConfiguration windowConfiguration;
 };
 
 namespace eng {
-	EngineConfiguration configuration;
-	RenderManager renderer;
-	UpdateManager updater;
-	Input input;
+	extern EngineConfiguration configuration;
 
-	bool isRunning = false;
+	extern RenderManager renderer;
+	extern UpdateManager updater;
+	extern Input input;
 
-	//Start all threads
-	void start();
+	extern std::atomic_bool isRunning;
+	extern std::mutex engineMtx;
 
-	//Join and stop all threads
-	void stop();
+	//Start all threads, create window etc..
+	extern bool init();
+
+	extern void start();
+	extern void joinAll();
+	extern void terminate();
 }

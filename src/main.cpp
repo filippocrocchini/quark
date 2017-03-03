@@ -1,13 +1,28 @@
+#include "../include/engine.h"
 #include "../include/core/graphics/window.h"
 
 void render();
-
-void resize(Window* window, int width, int height) {
-	std::fprintf(stdout, "%s, It worked!\n", window->config.title.c_str());
-}
+/*
+void resize(Window* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_M && GLFW_MOD_CONTROL & mods) {
+		window->iconify();
+	}
+}*/
 
 int main() {
-	if (!glfwInit()) {
+	if (!eng::init()) return -1;
+
+	eng::configuration.windowConfiguration.title = "Engine Test";
+	eng::configuration.windowConfiguration.antialiasing = 4;
+
+	//setup
+	eng::start();
+
+	eng::joinAll();//wait for all threads to finish
+	
+	//eng::terminate();
+	
+	/*if (!glfwInit()) {
 		std::fprintf(stderr, "Failed to initialize GLFW.\n");
 		return -1;
 	} else {
@@ -22,7 +37,7 @@ int main() {
 			return -1;
 		}
 
-		window.resizeCallback = resize;
+		window.keyCallback = resize;
 
 		window.bindContext();
 
@@ -36,6 +51,7 @@ int main() {
 	}
 
 	glfwTerminate();
+	*/
 	return 0;
 }
 

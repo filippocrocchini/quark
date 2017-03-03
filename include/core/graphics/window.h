@@ -10,6 +10,12 @@
 class Window;
 
 typedef void(*ResizeCallback)(Window*, int,int);
+typedef void(*KeyCallback)(Window*, int, int, int, int);
+typedef void(*CharacterCallback)(Window*, unsigned int);
+typedef void(*CharacterWithModifierCallback)(Window*, unsigned, int);
+typedef void(*CursorPositionCallback)(Window*, double, double);
+typedef void(*MouseButtonCallback)(Window*, int, int, int);
+typedef void(*ScrollCallback)(Window*, double, double);
 
 struct WindowConfiguration {
 	std::string title = "Default window name";
@@ -29,6 +35,7 @@ struct WindowConfiguration {
 	bool openglForwardCompatible = false;
 };
 
+//TODO: add support for custom cursor
 class Window {
 public:
 	WindowConfiguration config;
@@ -36,14 +43,23 @@ public:
 	uint16_t status;
 
 	ResizeCallback resizeCallback = nullptr;
+	KeyCallback keyCallback = nullptr;
+	CharacterCallback characterCallback = nullptr;
+	CharacterWithModifierCallback characterWithModifierCallback = nullptr;
+	CursorPositionCallback cursorCallback = nullptr;
+	MouseButtonCallback mouseButtonCallback = nullptr;
+	ScrollCallback scrollCallback = nullptr;
 
+	Window() = default;
 	Window(WindowConfiguration);
-	~Window(); //calls destroy
+	
+	void setConfiguration(WindowConfiguration);
 
 	void bindContext();
 	void releaseContext();
 
 	void pollEvents();
+	void swapBuffers();
 
 	void setTitle(std::string);
 	void setSize(uint32_t width, uint32_t height);
@@ -61,6 +77,14 @@ public:
 
 private:
 	static std::map<GLFWwindow*, Window*> handleToPtr;
+
+	static Window* getWindow(GLFWwindow*);
 	static void resize(GLFWwindow* handle, int width, int height);
+	static void key(GLFWwindow* handle, int key, int scancode, int action, int mods);
+	static void character(GLFWwindow* handle, unsigned int codepoint);
+	static void character_mod(GLFWwindow* handle, unsigned int codepoint, int mods);
+	static void cursor_pos(GLFWwindow* handle, double x, double y);
+	static void mouse_button(GLFWwindow* handle, int button, int action, int mods);
+	static void scroll(GLFWwindow* handle, double xoffset, double yoffset);
 };
 
