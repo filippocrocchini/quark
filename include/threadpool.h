@@ -3,6 +3,9 @@
 #include <vector>
 #include <queue>
 #include <functional>
+#include <exception>
+
+#include "thread_safe_queue.h"
 
 #define TASK_QUEUED 0
 #define TASK_FREE 1
@@ -12,20 +15,25 @@
 class Task {
 public:
 	int status = TASK_FREE;
-	virtual void execute() = 0;
+	void(*execute)(void) = []() {};
+
+	Task(void(*)(void));
 };
 
 class ThreadPool {
 public:
-	ThreadPool(uint32_t poolSize);
+	ThreadPool(uint32_t, uint32_t);
 	~ThreadPool();
 	
-	void submit(Task* t);
+	void submit(Task*);
+
+	bool running = true;
+	bool consume(Task**);
 
 private:
-	//Create thread safe queue: http://stackoverflow.com/questions/36762248/why-is-stdqueue-not-thread-safe
-	//std::queue<Task*> task_queue;
+	SharedQueue<Task*> tasks;
 	std::vector<std::thread> threads;
 
-	Task* consume();
+	std::mutex mtx;
+	std::condition_variable cv;
 };

@@ -1,11 +1,9 @@
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include <GL\GL.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-#include <thread>
+#include <GL/GL.h>
 
-#include <cstdio>
-#include <cstdlib>
+#include "../include/threadpool.h"
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -17,19 +15,21 @@
 
 int openWindow(GLFWwindow **window, bool vsync);
 void closeWindow(GLFWwindow *window);
-void render(GLFWwindow* window);
+void render();
+void update();
+
 void renderLoop();
 
+
+ThreadPool pool(4,20);
+GLFWwindow* window;
+Task updateTask(update);
+Task renderLoopTask(renderLoop);
+
 int main() {
-	std::thread a(renderLoop);
-	
-	std::fprintf(stdout, "Waiting for you to close the window...\n");
-	
-	a.join();
-
-	std::fprintf(stdout, "Bye!\n");
-	system("pause");
-
+	pool.submit(&renderLoopTask);
+	while(pool.running)
+		pool.submit(&updateTask);
 	return 0;
 }
 
@@ -74,10 +74,11 @@ int openWindow(GLFWwindow **window, bool vsync) {
 
 void closeWindow(GLFWwindow *window) {
 	glfwDestroyWindow(window);
+	pool.running = false;
 }
 
 void renderLoop() {
-	GLFWwindow *window = nullptr;
+	window = nullptr;
 	int error = openWindow(&window, true);
 
 	if (error != NO_ERROR) {
@@ -87,12 +88,13 @@ void renderLoop() {
 	}
 
 	while (!glfwWindowShouldClose(window)) {
-		render(window);
+		render();
 	}
+
 	closeWindow(window);
 }
 
-void render(GLFWwindow *window) {	
+void render() {	
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glColor3f(1, 1, 1);
@@ -108,3 +110,6 @@ void render(GLFWwindow *window) {
 	glfwPollEvents();
 }
 
+void update() {
+	fprintf(stdout, "Update running\n");
+}
