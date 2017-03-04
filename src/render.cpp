@@ -28,17 +28,14 @@ void RenderManager::renderThreadMain(RenderManager* self) {
 		}
 
 		//render
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glClear(GL_COLOR_BUFFER_BIT);
-		
-		glColor3f(1, 1, 1);
-		glBegin(GL_TRIANGLES);
-		{
-			glVertex2f(-1, -1);
-			glVertex2f( 1, -1);
-			glVertex2f( 1,  1);
+		if (self->renderables.size() > 0) {
+			for (auto rend = self->renderables.begin(); rend != self->renderables.end(); rend++) {
+				if((*rend)->enabled)
+					(*rend)->render();
+			}
 		}
-		glEnd();
 
 		self->window.swapBuffers();
 	}

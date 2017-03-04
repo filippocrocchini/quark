@@ -16,7 +16,6 @@ namespace eng {
 
 	extern RenderManager renderer;
 	extern UpdateManager updater;
-	extern Input input;
 
 	extern std::atomic_bool isRunning;
 	extern std::mutex engineMtx;
@@ -24,6 +23,8 @@ namespace eng {
 	//Start all threads, create window etc..
 	extern bool init();
 
+	extern void prepare();
+	
 	extern void start();
 	extern void joinAll();
 	extern void terminate();

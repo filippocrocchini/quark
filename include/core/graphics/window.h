@@ -12,7 +12,7 @@ class Window;
 typedef void(*ResizeCallback)(Window*, int,int);
 typedef void(*KeyCallback)(Window*, int, int, int, int);
 typedef void(*CharacterCallback)(Window*, unsigned int);
-typedef void(*CharacterWithModifierCallback)(Window*, unsigned, int);
+typedef void(*CharacterWithModifierCallback)(Window*, unsigned int, int);
 typedef void(*CursorPositionCallback)(Window*, double, double);
 typedef void(*MouseButtonCallback)(Window*, int, int, int);
 typedef void(*ScrollCallback)(Window*, double, double);
@@ -35,7 +35,7 @@ struct WindowConfiguration {
 	bool openglForwardCompatible = false;
 };
 
-//TODO: add support for custom cursor
+//TODO add support for custom cursor
 class Window {
 public:
 	WindowConfiguration config;
@@ -73,6 +73,7 @@ public:
 	bool shouldClose();
 
 	void create(); //creates window
+	void recreate(); // destroys the window and creates a new one
 	void destroy();//deletes this window (glfwDestroyWindow)
 
 private:

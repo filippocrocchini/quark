@@ -119,6 +119,11 @@ void Window::destroy(){
 		Window::handleToPtr.erase(windowHandle);
 }
 
+void Window::recreate(){
+	destroy();
+	create();
+}
+
 Window* Window::getWindow(GLFWwindow* handle) {
 	Window* window = nullptr;
 	try {

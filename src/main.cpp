@@ -9,64 +9,41 @@ void resize(Window* window, int key, int scancode, int action, int mods) {
 	}
 }*/
 
+class Test : public Renderable {
+public:
+	Test(GameObject* parent) : Renderable(parent) {};
+	
+	void render() {		
+		glColor3f(1, 1, 1);
+		glBegin(GL_TRIANGLES);
+		{
+			glVertex2f(-1, -1);
+			glVertex2f( 1, -1);
+			glVertex2f( 1,  1);
+		}
+		glEnd();
+	}
+};
+
 int main() {
 	if (!eng::init()) return -1;
 
 	eng::configuration.windowConfiguration.title = "Engine Test";
 	eng::configuration.windowConfiguration.antialiasing = 4;
+	
+	eng::prepare();
+
+	GameObject go;
+	Test comp(&go);
+	
+	go.addComponent((Component*) &comp);
+
+	//TODO make a "root" or something to load on start
+	eng::renderer.renderables.insert((Renderable*) &comp);
 
 	//setup
 	eng::start();
-
 	eng::joinAll();//wait for all threads to finish
-	
-	//eng::terminate();
-	
-	/*if (!glfwInit()) {
-		std::fprintf(stderr, "Failed to initialize GLFW.\n");
-		return -1;
-	} else {
-		WindowConfiguration windowConfig;
-		windowConfig.title = "Window test";
-
-		Window window(windowConfig);
-		window.create();
-		
-		if (window.status == WINDOW_CREATION_FAILED) {
-			std::fprintf(stderr, "Failed to open the window.\n");
-			return -1;
-		}
-
-		window.keyCallback = resize;
-
-		window.bindContext();
-
-		while (!window.shouldClose()) {
-			window.pollEvents();
-			if (glfwGetKey(window.windowHandle, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
-				break;
-		}
-		
-		window.releaseContext();
-	}
-
-	glfwTerminate();
-	*/
+	eng::terminate();
 	return 0;
 }
-
-//void render() {	
-//	glClear(GL_COLOR_BUFFER_BIT);
-//
-//	glColor3f(1, 1, 1);
-//	glBegin(GL_TRIANGLES);
-//	{
-//		glVertex2f(-1, -1);
-//		glVertex2f( 1, -1);
-//		glVertex2f( 1,  1);
-//	}
-//	glEnd();
-//
-//	glfwSwapBuffers(window);
-//	glfwPollEvents();
-//}
