@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <map>
+#include <memory>
 
 class GameObject;
 class Toggleable;
@@ -19,22 +20,26 @@ public:
 class Component : public Toggleable{
 public:
 	const static std::string name;
-	GameObject* parent = nullptr;
+	std::shared_ptr<GameObject> parent = nullptr;
 
-	Component(GameObject*);
+	Component(std::shared_ptr<GameObject>);
 };
 
-class GameObject : Toggleable {
+class GameObject : public Toggleable {
 public:
-	GameObject* parent;
-	std::unordered_set<GameObject*> children;
-	std::map<std::string, Component*> components;
+	//Do not modify, this is only for handling instances of the same class in the scene.
+	uint32_t _id;
+	std::shared_ptr<GameObject> parent;
+	std::unordered_set<std::shared_ptr<GameObject>> children;
+	std::map<std::string, std::shared_ptr<Component>> components;
 
-	Component* getComponentByName(std::string);
-	void addComponent(Component*);
-	void removeComponent(Component*);
+	GameObject(std::shared_ptr<GameObject> parent);
+
+	std::shared_ptr<Component> getComponentByName(std::string);
+	void addComponent(std::shared_ptr<Component>);
+	void removeComponent(std::shared_ptr<Component>);
 	
-	void addChild(GameObject*);
-	void removeChild(GameObject*);
+	void addChild(std::shared_ptr<GameObject>);
+	void removeChild(std::shared_ptr<GameObject>);
 };
 

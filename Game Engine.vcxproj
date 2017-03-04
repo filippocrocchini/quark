@@ -35,6 +35,7 @@
     <ClInclude Include="include\core\managers\render.h" />
     <ClInclude Include="include\core\managers\update.h" />
     <ClInclude Include="include\core\object\gameobject.h" />
+    <ClInclude Include="include\core\managers\scene.h" />
     <ClInclude Include="include\engine.h" />
     <ClInclude Include="include\core\threads\threadpool.h" />
     <ClInclude Include="include\core\threads\thread_safe_queue.h" />

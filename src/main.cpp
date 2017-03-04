@@ -11,7 +11,7 @@ void resize(Window* window, int key, int scancode, int action, int mods) {
 
 class Test : public Renderable {
 public:
-	Test(GameObject* parent) : Renderable(parent) {};
+	Test(std::shared_ptr<GameObject> parent) : Renderable(parent) {};
 	
 	void render() {		
 		glColor3f(1, 1, 1);
@@ -33,10 +33,10 @@ int main() {
 	
 	eng::prepare();
 
-	GameObject go;
-	Test comp(&go);
+	GameObject go(nullptr);
+	Test comp(std::make_shared<GameObject>(go));
 	
-	go.addComponent((Component*) &comp);
+	go.addComponent(std::make_shared<Component>(comp));
 
 	//TODO make a "root" or something to load on start
 	eng::renderer.renderables.insert((Renderable*) &comp);

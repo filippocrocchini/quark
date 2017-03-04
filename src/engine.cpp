@@ -3,7 +3,6 @@
 #include "../include/engine.h"
 
 EngineConfiguration eng::configuration;
-
 RenderManager eng::renderer;
 UpdateManager eng::updater;
 

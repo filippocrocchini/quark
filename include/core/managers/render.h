@@ -7,7 +7,7 @@
 
 class Renderable : public Component {
 public:
-	Renderable(GameObject* parent) : Component(parent) {};
+	Renderable(std::shared_ptr<GameObject> parent) : Component(parent) {};
 	virtual void render() = 0;
 };
 

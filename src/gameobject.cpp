@@ -3,7 +3,7 @@
 const std::string Component::name = "Component";
 
 //_________________Component_________________
-Component::Component(GameObject* parent) {
+Component::Component(std::shared_ptr<GameObject> parent) {
 	this->parent = parent;
 }
 
@@ -22,9 +22,15 @@ void Toggleable::disable() {
 }
 
 
+
 //_________________GameObject_________________
-Component* GameObject::getComponentByName(std::string name) {
-	Component* c = nullptr;
+GameObject::GameObject(std::shared_ptr<GameObject> parent)
+{
+	this->parent = parent;
+}
+
+std::shared_ptr<Component> GameObject::getComponentByName(std::string name) {
+	std::shared_ptr<Component> c = nullptr;
 	try {
 		c = components[name];
 	}
@@ -34,18 +40,18 @@ Component* GameObject::getComponentByName(std::string name) {
 	return c;
 }
 
-void GameObject::addComponent(Component* c) {
-	components.insert(std::pair<std::string, Component*>(c->name, c));
+void GameObject::addComponent(std::shared_ptr<Component> c) {
+	components.insert(std::pair<std::string, std::shared_ptr<Component>>(c->name, c));
 }
 
-void GameObject::removeComponent(Component* c) {
+void GameObject::removeComponent(std::shared_ptr<Component> c) {
 	components.erase(c->name);
 }
 	
-void GameObject::addChild(GameObject* child) {
+void GameObject::addChild(std::shared_ptr<GameObject> child) {
 	children.insert(child);
 }
 
-void GameObject::removeChild(GameObject* child) {
+void GameObject::removeChild(std::shared_ptr<GameObject> child) {
 	children.erase(child);
 }
