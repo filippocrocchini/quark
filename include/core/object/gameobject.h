@@ -5,41 +5,64 @@
 #include <memory>
 
 class GameObject;
-class Toggleable;
-class Component;
-
 
 class Toggleable {
-public:
+protected:
 	bool enabled = true;
+public:
+	bool isEnabled();
 	void toggle();
 	void enable();
 	void disable();
+	virtual ~Toggleable() {};
 };
 
 class Component : public Toggleable{
 public:
-	const static std::string name;
-	std::shared_ptr<GameObject> parent = nullptr;
+	GameObject* parent = nullptr;
 
-	Component(std::shared_ptr<GameObject>);
+	Component(GameObject&);
+
+	bool isEnabled();
 };
+
+class Updatable : public Component {
+public:
+	Updatable(GameObject& parent) : Component(parent) {};
+	virtual void update(double delta) = 0;
+};
+
+class Renderable : public Component {
+public:
+	Renderable(GameObject& parent) : Component(parent) {};
+	virtual void render() = 0;
+};
+
 
 class GameObject : public Toggleable {
 public:
 	//Do not modify, this is only for handling instances of the same class in the scene.
-	uint32_t _id;
-	std::shared_ptr<GameObject> parent;
-	std::unordered_set<std::shared_ptr<GameObject>> children;
-	std::map<std::string, std::shared_ptr<Component>> components;
+	//uint32_t _id;
+	GameObject* parent;
 
-	GameObject(std::shared_ptr<GameObject> parent);
-
-	std::shared_ptr<Component> getComponentByName(std::string);
-	void addComponent(std::shared_ptr<Component>);
-	void removeComponent(std::shared_ptr<Component>);
+	//If the scene is nullptr this object is not registered in the engine,
+	//therefore it's not going to be updated/rendered.
 	
-	void addChild(std::shared_ptr<GameObject>);
-	void removeChild(std::shared_ptr<GameObject>);
+	std::unordered_set<GameObject*> children;
+	std::unordered_set<Component*> components;
+
+	//If the parent is nullptr then this object is a root.
+	GameObject(GameObject* parent);
+
+	void addChild(GameObject&);
+	void removeChild(GameObject&);
+
+	//Component* getComponentByName(std::string);
+	
+	void addComponent(Component&);
+
+	void removeComponent(Component&);
+
+	bool isEnabled();
 };
 

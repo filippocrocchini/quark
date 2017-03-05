@@ -1,14 +1,13 @@
 #pragma once
 #include <thread>
 
-class UpdateManager {
-public:
-	std::thread* thread;
+namespace eng {
+	namespace UpdateManager {
+		extern std::thread* thread;
 
-	UpdateManager() = default;
+		extern void start();
+		extern void join();
 
-	void start();
-	void join();
-private:
-	static void updateThreadMain(UpdateManager* self);
-};
+		extern void updateThreadMain();
+	}
+}

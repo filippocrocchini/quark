@@ -4,21 +4,37 @@
 
 #include "../object/gameobject.h"
 
-struct Scene {
-	std::map<uint32_t, std::shared_ptr<GameObject>> gameObjects;
-};
+/*
+Scene {
+	shared->GameObject vector;
+	When an object is added/removed to the scene, update all the fields "Scene" in
+	every child and register/unregister all their components.
+}
 
+GameObject {
+	shared->Scene;
+	When a child is added/removed to this GameObject tell the scene that a
+	new GameObject has been added/removed.
+}
+*/
 
-//This class interfaces directly with the engine.
-class SceneManager {
+class Scene {
 public:
-	std::shared_ptr<Scene> currentScene;
-	
+	std::vector<GameObject*> rootGameObjects;
+
+	std::unordered_set<Renderable*> renderables;
+	std::unordered_set<Updatable*> updatables;
 
 	//TODO: Find a (fast) way to update the scene graph on GameObject::addChild and GameObject::removeChild
 	/*
 	Adds/Removes the Object to the 'root' of the scene, and updates both the renderer and the updater.
 	*/
-	void addGameObject(std::shared_ptr<GameObject>);
-	void removeGameObject(std::shared_ptr<GameObject>);
+	void addRootGameObject(GameObject&);
+	void removeRootGameObject(GameObject&);
+
+	void registerGameObject(GameObject&);
+	void unregisterGameObject(GameObject&);
+
+	void registerComponent(Component&);
+	void unregisterComponent(Component&);
 };

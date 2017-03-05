@@ -3,11 +3,11 @@
 #include "../include/engine.h"
 
 EngineConfiguration eng::configuration;
-RenderManager eng::renderer;
-UpdateManager eng::updater;
 
 std::atomic_bool eng::isRunning;
 std::mutex eng::engineMtx;
+
+Scene* eng::_currentScene;
 
 void test(eng::Input::MouseMoveEvent *e) {
 	std::printf("Mouse deltax: %f, deltay: %f.\n", e->deltaX, e->deltaY);
@@ -27,26 +27,31 @@ bool eng::init() {
 	return true;
 }
 
-void eng::prepare() {
-	isRunning.store(true);
-	renderer.init(configuration.windowConfiguration);
-	Input::bindCallbacks(&renderer.window);
+void eng::create() {
+	RenderManager::init(configuration.windowConfiguration);
+	Input::bindCallbacks(RenderManager::window);
 }
 
 void eng::start() {
 	//Initialize all game objects;
 	Input::registerMouseMoveHandler(test);
 	
-	renderer.start();
-	updater.start();
+	isRunning.store(true);
+	RenderManager::start();
+	UpdateManager::start();
 }
 
 void eng::joinAll() {
-	renderer.join();
-	updater.join();
+	RenderManager::join();
+	UpdateManager::join();
 }
 
 void eng::terminate() {
 	glfwTerminate();
+}
+
+void eng::setCurrentScene(Scene& scene) {
+	_currentScene = &scene;
+	//@Implement
 }
 

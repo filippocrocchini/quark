@@ -24,6 +24,7 @@
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\render.cpp" />
+    <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\threadpool.cpp" />
     <ClCompile Include="src\thread_safe_queue.cpp" />
     <ClCompile Include="src\update.cpp" />
@@ -33,9 +34,9 @@
     <ClInclude Include="include\core\graphics\window.h" />
     <ClInclude Include="include\core\managers\input.h" />
     <ClInclude Include="include\core\managers\render.h" />
+    <ClInclude Include="include\core\managers\scene.h" />
     <ClInclude Include="include\core\managers\update.h" />
     <ClInclude Include="include\core\object\gameobject.h" />
-    <ClInclude Include="include\core\managers\scene.h" />
     <ClInclude Include="include\engine.h" />
     <ClInclude Include="include\core\threads\threadpool.h" />
     <ClInclude Include="include\core\threads\thread_safe_queue.h" />

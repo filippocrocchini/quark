@@ -66,7 +66,7 @@ namespace eng {
 		extern void registerMouseClickHandler(MouseClickHandler);
 		extern void registerScrollHandler(ScrollHandler);
 
-		extern void bindCallbacks(Window *window);
+		extern void bindCallbacks(Window& window);
 
 		extern void onKey(Window* handle, int key, int scancode, int action, int mods);
 		//extern void onCharacter(Window* handle, unsigned int codepoint);

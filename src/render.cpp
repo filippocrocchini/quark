@@ -1,45 +1,48 @@
 #include "../include/core/managers/render.h"
 #include "../include/engine.h"
 
-void RenderManager::init(WindowConfiguration config) {
+std::thread* eng::RenderManager::thread;
+Window eng::RenderManager::window;
+
+void eng::RenderManager::init(WindowConfiguration config) {
 	window.setConfiguration(config);
 }
 
-void RenderManager::start() {
-	thread = new std::thread(renderThreadMain, this);
+void eng::RenderManager::start() {
+	thread = new std::thread(renderThreadMain);
 }
 
-void RenderManager::join() {
+void eng::RenderManager::join() {
 	thread->join();
 	delete thread;
 }
 
-void RenderManager::renderThreadMain(RenderManager* self) {
-	self->window.create();
+void eng::RenderManager::renderThreadMain() {
+	window.create();
 
-	self->window.bindContext();
+	window.bindContext();
 	while (eng::isRunning.load()) {
-		self->window.pollEvents();
+		window.pollEvents();
 		
-		if (self->window.shouldClose()) {
+		if (window.shouldClose()) {
 			eng::engineMtx.lock();
 			eng::isRunning.store(false);
 			eng::engineMtx.unlock();
 		}
+		if (eng::_currentScene != nullptr) {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//render
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if (self->renderables.size() > 0) {
-			for (auto rend = self->renderables.begin(); rend != self->renderables.end(); rend++) {
-				if((*rend)->enabled)
-					(*rend)->render();
+			if (eng::_currentScene->renderables.size() > 0) {
+				for (auto rend = eng::_currentScene->renderables.begin(); rend != eng::_currentScene->renderables.end(); rend++) {
+					if ((*rend)->isEnabled())
+						(*rend)->render();
+				}
 			}
 		}
 
-		self->window.swapBuffers();
+		window.swapBuffers();
 	}
-	self->window.releaseContext();
+	window.releaseContext();
 
-	self->window.destroy();
+	window.destroy();
 }

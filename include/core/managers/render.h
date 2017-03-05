@@ -3,26 +3,16 @@
 #include <unordered_set>
 
 #include "../graphics/window.h"
-#include "../object/gameobject.h"
 
-class Renderable : public Component {
-public:
-	Renderable(std::shared_ptr<GameObject> parent) : Component(parent) {};
-	virtual void render() = 0;
-};
+namespace eng {
+	namespace RenderManager {
+		extern std::thread* thread;
 
-class RenderManager {
-public:
-	std::thread* thread;
-	std::unordered_set<Renderable*> renderables;
+		extern Window window; //Extend this for multiple windows (I don't think it's a good idea though)
 
-	Window window; //Extend this for multiple windows (I don't think it's a good idea though)
-
-	RenderManager() = default;
-
-	void init(WindowConfiguration);
-	void start();
-	void join();
-private:
-	static void renderThreadMain(RenderManager* self);
-};
+		extern void init(WindowConfiguration);
+		extern void start();
+		extern void join();
+		extern void renderThreadMain();
+	}
+}

@@ -1,7 +1,5 @@
 #include "../include/engine.h"
-#include "../include/core/graphics/window.h"
 
-void render();
 /*
 void resize(Window* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_M && GLFW_MOD_CONTROL & mods) {
@@ -9,9 +7,9 @@ void resize(Window* window, int key, int scancode, int action, int mods) {
 	}
 }*/
 
-class Test : public Renderable {
+class Triangle : public Renderable {
 public:
-	Test(std::shared_ptr<GameObject> parent) : Renderable(parent) {};
+	Triangle(GameObject& parent) : Renderable(parent) {};
 	
 	void render() {		
 		glColor3f(1, 1, 1);
@@ -25,22 +23,41 @@ public:
 	}
 };
 
+class Lifetime : public Updatable {
+public:
+	double lifetime;
+	Lifetime(GameObject& parent, double lifetime) : Updatable(parent) {
+		this->lifetime = lifetime;
+	};
+	
+	void update(double delta) {
+		std::printf("lifetime: %f.\n", lifetime);
+		if (lifetime < 0)
+			parent->disable();
+		lifetime -= delta * 10;
+	}
+};
+
 int main() {
 	if (!eng::init()) return -1;
 
 	eng::configuration.windowConfiguration.title = "Engine Test";
 	eng::configuration.windowConfiguration.antialiasing = 4;
-	
-	eng::prepare();
+
+	eng::create();
+
+	Scene mainScene;
 
 	GameObject go(nullptr);
-	Test comp(std::make_shared<GameObject>(go));
-	
-	go.addComponent(std::make_shared<Component>(comp));
+	Triangle triangle(go);
+	Lifetime lifetime(go, 20);
 
-	//TODO make a "root" or something to load on start
-	eng::renderer.renderables.insert((Renderable*) &comp);
+	go.addComponent(triangle);
+	go.addComponent(lifetime);
 
+	mainScene.addRootGameObject(go);
+
+	eng::setCurrentScene(mainScene);
 	//setup
 	eng::start();
 	eng::joinAll();//wait for all threads to finish

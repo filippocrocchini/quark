@@ -8,13 +8,13 @@ std::unordered_set<eng::Input::ScrollHandler> eng::Input::scrollHandlers;
 double eng::Input::mouseX = 0;
 double eng::Input::mouseY = 0;
 
-void eng::Input::bindCallbacks(Window *window) {
-	std::printf("Binding input callbacks to %s.\n", window->config.title.c_str());
-	window->keyCallback = onKey;
+void eng::Input::bindCallbacks(Window& window) {
+	std::printf("Binding input callbacks to %s.\n", window.config.title.c_str());
+	window.keyCallback = onKey;
 	//window->characterWithModifierCallback = onCharacterWithModifier;
-	window->cursorCallback = onCursorMove;
-	window->mouseButtonCallback = onMouseButton;
-	window->scrollCallback = onScroll;
+	window.cursorCallback = onCursorMove;
+	window.mouseButtonCallback = onMouseButton;
+	window.scrollCallback = onScroll;
 }
 
 void eng::Input::registerKeyHandler(KeyHandler handler) {

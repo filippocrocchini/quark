@@ -1,12 +1,16 @@
 #include "../include/core/object/gameobject.h"
 
-const std::string Component::name = "Component";
-
 //_________________Component_________________
-Component::Component(std::shared_ptr<GameObject> parent) {
-	this->parent = parent;
+Component::Component(GameObject& parent) {
+	this->parent = &parent;
 }
 
+bool Component::isEnabled() {
+	if(parent != nullptr)
+		return parent->isEnabled() && enabled;
+	else
+		return enabled;
+}
 
 //_________________Toggleable_________________
 void Toggleable::toggle() {
@@ -21,37 +25,46 @@ void Toggleable::disable() {
 	enabled = false;
 }
 
-
+bool Toggleable::isEnabled() {
+	return enabled;
+}
 
 //_________________GameObject_________________
-GameObject::GameObject(std::shared_ptr<GameObject> parent)
+GameObject::GameObject(GameObject* parent)
 {
 	this->parent = parent;
 }
 
-std::shared_ptr<Component> GameObject::getComponentByName(std::string name) {
-	std::shared_ptr<Component> c = nullptr;
-	try {
-		c = components[name];
-	}
-	catch (std::out_of_range e) {
-		return nullptr;
-	}
-	return c;
+//Component* GameObject::getComponentByName(std::string name) {
+//	Component* c = nullptr;
+//	try {
+//		c = components[name];
+//	}
+//	catch (std::out_of_range e) {
+//		return nullptr;
+//	}
+//	return c;
+//}
+
+void GameObject::addComponent(Component& c) {
+	components.insert(&c);
 }
 
-void GameObject::addComponent(std::shared_ptr<Component> c) {
-	components.insert(std::pair<std::string, std::shared_ptr<Component>>(c->name, c));
-}
-
-void GameObject::removeComponent(std::shared_ptr<Component> c) {
-	components.erase(c->name);
+void GameObject::removeComponent(Component& c) {
+	components.erase(&c);
 }
 	
-void GameObject::addChild(std::shared_ptr<GameObject> child) {
-	children.insert(child);
+void GameObject::addChild(GameObject& child) {
+	children.insert(&child);
 }
 
-void GameObject::removeChild(std::shared_ptr<GameObject> child) {
-	children.erase(child);
+void GameObject::removeChild(GameObject& child) {
+	children.erase(&child);
+}
+
+bool GameObject::isEnabled() {
+	if(parent != nullptr)
+		return parent->isEnabled() && enabled;
+	else
+		return enabled;
 }

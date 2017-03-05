@@ -16,6 +16,7 @@
     <ClCompile Include="src\render.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\gameobject.cpp" />
+    <ClCompile Include="src\scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\graphics\window.h">
