@@ -1,20 +1,20 @@
 #include <chrono>
 
-#include "../include/core/managers/update.h"
-#include "../include/engine.h"
+#include "core/managers/update.h"
+#include "core/engine.h"
 
-std::thread* eng::UpdateManager::thread;
+std::thread* eng::update_manager::thread;
 
-void eng::UpdateManager::start() {
+void eng::update_manager::start() {
 	thread = new std::thread(updateThreadMain);
 }
 
-void eng::UpdateManager::join() {
+void eng::update_manager::join() {
 	thread->join();
 	delete thread;
 }
 
-void eng::UpdateManager::updateThreadMain() {
+void eng::update_manager::updateThreadMain() {
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	auto currentTime = std::chrono::high_resolution_clock::now();
 

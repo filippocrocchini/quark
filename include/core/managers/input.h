@@ -1,10 +1,10 @@
 #pragma once
 #include <unordered_set>
 
-#include "../graphics/window.h"
+#include "core/graphics/window.h"
 
 namespace eng {
-	namespace Input {
+	namespace input {
 		struct Event {
 			bool cancelled = false;
 		};

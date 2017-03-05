@@ -2,7 +2,7 @@
 #include <thread>
 
 namespace eng {
-	namespace UpdateManager {
+	namespace update_manager {
 		extern std::thread* thread;
 
 		extern void start();

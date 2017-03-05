@@ -1,4 +1,4 @@
-#include "../include/core/object/gameobject.h"
+#include "core/object/gameobject.h"
 
 //_________________Component_________________
 Component::Component(GameObject& parent) {

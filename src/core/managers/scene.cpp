@@ -1,4 +1,4 @@
-#include "../include/core/managers/scene.h"
+#include "core/managers/scene.h"
 
 void Scene::addRootGameObject(GameObject& object) {
 	rootGameObjects.push_back(&object);

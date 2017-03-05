@@ -4,25 +4,20 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\thread_safe_queue.cpp">
+    <ClCompile Include="src\core\graphics\window.cpp" />
+    <ClCompile Include="src\core\managers\update.cpp" />
+    <ClCompile Include="src\core\managers\render.cpp" />
+    <ClCompile Include="src\core\managers\input.cpp" />
+    <ClCompile Include="src\core\managers\scene.cpp" />
+    <ClCompile Include="src\core\object\gameobject.cpp" />
+    <ClCompile Include="src\core\threads\threadpool.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\threadpool.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\window.cpp" />
-    <ClCompile Include="src\engine.cpp" />
-    <ClCompile Include="src\update.cpp" />
-    <ClCompile Include="src\render.cpp" />
-    <ClCompile Include="src\input.cpp" />
-    <ClCompile Include="src\gameobject.cpp" />
-    <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\core\engine.cpp" />
+    <ClCompile Include="src\core\managers\resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\graphics\window.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\core\managers\input.h">
@@ -42,6 +37,10 @@
     </ClInclude>
     <ClInclude Include="include\core\object\gameobject.h" />
     <ClInclude Include="include\core\managers\scene.h" />
+    <ClInclude Include="include\core\managers\resource.h" />
+    <ClInclude Include="include\core\engine.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

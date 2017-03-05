@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 
-#include "../object/gameobject.h"
+#include "core/object/gameobject.h"
 
 /*
 Scene {

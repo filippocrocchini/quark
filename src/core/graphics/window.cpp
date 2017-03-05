@@ -1,4 +1,4 @@
-#include "../include/core/graphics/window.h"
+#include "core/graphics/window.h"
 
 std::map<GLFWwindow*, Window*> Window::handleToPtr;
 

@@ -1,14 +1,14 @@
-#include "../include/core/managers/input.h"
+#include "core/managers/input.h"
 
-std::unordered_set<eng::Input::KeyHandler> eng::Input::keyHandlers;
-std::unordered_set<eng::Input::MouseMoveHandler> eng::Input::mouseMoveHandlers;
-std::unordered_set<eng::Input::MouseClickHandler> eng::Input::mouseClickHandlers;
-std::unordered_set<eng::Input::ScrollHandler> eng::Input::scrollHandlers;
+std::unordered_set<eng::input::KeyHandler> eng::input::keyHandlers;
+std::unordered_set<eng::input::MouseMoveHandler> eng::input::mouseMoveHandlers;
+std::unordered_set<eng::input::MouseClickHandler> eng::input::mouseClickHandlers;
+std::unordered_set<eng::input::ScrollHandler> eng::input::scrollHandlers;
 
-double eng::Input::mouseX = 0;
-double eng::Input::mouseY = 0;
+double eng::input::mouseX = 0;
+double eng::input::mouseY = 0;
 
-void eng::Input::bindCallbacks(Window& window) {
+void eng::input::bindCallbacks(Window& window) {
 	std::printf("Binding input callbacks to %s.\n", window.config.title.c_str());
 	window.keyCallback = onKey;
 	//window->characterWithModifierCallback = onCharacterWithModifier;
@@ -17,23 +17,23 @@ void eng::Input::bindCallbacks(Window& window) {
 	window.scrollCallback = onScroll;
 }
 
-void eng::Input::registerKeyHandler(KeyHandler handler) {
+void eng::input::registerKeyHandler(KeyHandler handler) {
 	keyHandlers.insert(handler);
 }
 
-void eng::Input::registerMouseMoveHandler(MouseMoveHandler handler) {
+void eng::input::registerMouseMoveHandler(MouseMoveHandler handler) {
 	mouseMoveHandlers.insert(handler);
 }
 
-void eng::Input::registerMouseClickHandler(MouseClickHandler handler) {
+void eng::input::registerMouseClickHandler(MouseClickHandler handler) {
 	mouseClickHandlers.insert(handler);
 }
 
-void eng::Input::registerScrollHandler(ScrollHandler handler) {
+void eng::input::registerScrollHandler(ScrollHandler handler) {
 	scrollHandlers.insert(handler);
 }
 
-void eng::Input::onKey(Window* handle, int key, int scancode, int action, int mods) {
+void eng::input::onKey(Window* handle, int key, int scancode, int action, int mods) {
 	if (keyHandlers.size() <= 0) return;
 
 	KeyEvent e;
@@ -57,11 +57,11 @@ void eng::Input::onKey(Window* handle, int key, int scancode, int action, int mo
 }
 
 
-//void eng::Input::onCharacterWithModifier(Window* handle, unsigned int codepoint, int mods) {
+//void eng::input::onCharacterWithModifier(Window* handle, unsigned int codepoint, int mods) {
 //	std::printf("Charcter with Modifier typed: %d + %d.\n", codepoint, mods);
 //}
 
-void eng::Input::onCursorMove(Window* handle, double x, double y) {
+void eng::input::onCursorMove(Window* handle, double x, double y) {
 	if (mouseMoveHandlers.size() <= 0) return;
 
 	MouseMoveEvent e;
@@ -81,7 +81,7 @@ void eng::Input::onCursorMove(Window* handle, double x, double y) {
 	mouseY = y;
 }
 
-void eng::Input::onMouseButton(Window* handle, int button, int action, int mods) {
+void eng::input::onMouseButton(Window* handle, int button, int action, int mods) {
 	if (mouseClickHandlers.size() <= 0) return;
 
 	MouseClickEvent e;
@@ -102,7 +102,7 @@ void eng::Input::onMouseButton(Window* handle, int button, int action, int mods)
 	}
 }
 
-void eng::Input::onScroll(Window* handle, double xoffset, double yoffset) {
+void eng::input::onScroll(Window* handle, double xoffset, double yoffset) {
 	if (scrollHandlers.size() <= 0) return;
 
 	ScrollEvent e;

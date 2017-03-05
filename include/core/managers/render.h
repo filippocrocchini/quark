@@ -2,10 +2,10 @@
 #include <thread>
 #include <unordered_set>
 
-#include "../graphics/window.h"
+#include "core/graphics/window.h"
 
 namespace eng {
-	namespace RenderManager {
+	namespace render_manager {
 		extern std::thread* thread;
 
 		extern Window window; //Extend this for multiple windows (I don't think it's a good idea though)

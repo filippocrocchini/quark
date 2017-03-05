@@ -1,23 +1,23 @@
-#include "../include/core/managers/render.h"
-#include "../include/engine.h"
+#include "core/managers/render.h"
+#include "core/engine.h"
 
-std::thread* eng::RenderManager::thread;
-Window eng::RenderManager::window;
+std::thread* eng::render_manager::thread;
+Window eng::render_manager::window;
 
-void eng::RenderManager::init(WindowConfiguration config) {
+void eng::render_manager::init(WindowConfiguration config) {
 	window.setConfiguration(config);
 }
 
-void eng::RenderManager::start() {
+void eng::render_manager::start() {
 	thread = new std::thread(renderThreadMain);
 }
 
-void eng::RenderManager::join() {
+void eng::render_manager::join() {
 	thread->join();
 	delete thread;
 }
 
-void eng::RenderManager::renderThreadMain() {
+void eng::render_manager::renderThreadMain() {
 	window.create();
 
 	window.bindContext();

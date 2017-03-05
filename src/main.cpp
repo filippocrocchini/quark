@@ -1,4 +1,4 @@
-#include "../include/engine.h"
+#include "core/engine.h"
 
 /*
 void resize(Window* window, int key, int scancode, int action, int mods) {
@@ -46,8 +46,10 @@ int main() {
 
 	eng::create();
 
-	Scene mainScene;
+	ResourceTemplate newRes{"","test",RESOURCE_TEXT_FILE};
+	eng::resource_manager::loadResource(newRes);
 
+	Scene mainScene;
 	GameObject go(nullptr);
 	Triangle triangle(go);
 	Lifetime lifetime(go, 20);

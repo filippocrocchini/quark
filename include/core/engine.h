@@ -7,6 +7,7 @@
 #include "core\managers\update.h"
 #include "core\managers\input.h"
 #include "core\managers\scene.h"
+#include "core\managers\resource.h"
 
 struct EngineConfiguration {
 	WindowConfiguration windowConfiguration;
