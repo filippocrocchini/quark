@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="it/filippocrocchini/engine/core/Engine.java|it/filippocrocchini/engine/common/IGame.java|it/filippocrocchini/engine/common/Game.java|it/filippocrocchini/engine/common/OldResourceLoader.java|it/filippocrocchini/engine/core/resource/OldResourceLoader.java|it/filippocrocchini/engine/removed/FragmentShader.java|it/filippocrocchini/engine/removed/ShaderResource.java|it/filippocrocchini/engine/removed/VertexShader.java|it/filippocrocchini/engine/common/graphics/Model.java|it/filippocrocchini/engine/removed/Model.java" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jython"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
