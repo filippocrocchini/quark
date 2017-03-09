@@ -2,7 +2,7 @@
 #include <thread>
 #include <vector>
 #include <map>
-#include "core\threads\thread_safe_queue.h"
+#include "core/threads/thread_safe_queue.h"
 
 #define RESOURCE_TEXT_FILE 0
 #define RESOURCE_BINARY_FILE 1

@@ -3,11 +3,11 @@
 #include <atomic>
 #include <mutex>
 
-#include "core\managers\render.h"
-#include "core\managers\update.h"
-#include "core\managers\input.h"
-#include "core\managers\scene.h"
-#include "core\managers\resource.h"
+#include "core/managers/render.h"
+#include "core/managers/update.h"
+#include "core/managers/input.h"
+#include "core/managers/scene.h"
+#include "core/managers/resource.h"
 
 struct EngineConfiguration {
 	WindowConfiguration windowConfiguration;
