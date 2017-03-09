@@ -9,7 +9,7 @@ double eng::input::mouseX = 0;
 double eng::input::mouseY = 0;
 
 void eng::input::bindCallbacks(Window& window) {
-	std::printf("Binding input callbacks to %s.\n", window.config.title.c_str());
+	std::cout << "Binding input callbacks to "<< window.config.title.c_str() << "%s.\n";
 	window.keyCallback = onKey;
 	//window->characterWithModifierCallback = onCharacterWithModifier;
 	window.cursorCallback = onCursorMove;

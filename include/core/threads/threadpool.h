@@ -4,6 +4,7 @@
 #include <queue>
 #include <functional>
 #include <exception>
+#include <condition_variable>
 
 #include "thread_safe_queue.h"
 

@@ -87,7 +87,7 @@ void Window::create() {
 	windowHandle = glfwCreateWindow(config.width, config.height, config.title.c_str(), monitor, 0);
 
 	if (windowHandle == nullptr) {
-		std::fprintf(stderr, "Failed to create GLFW Window.\n");
+		std::cerr << "Failed to create GLFW Window.\n";
 		status = WINDOW_CREATION_FAILED;
 		return;
 	}

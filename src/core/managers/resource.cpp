@@ -1,13 +1,14 @@
-#include "core\managers\resource.h"
-#include "core\engine.h"
+#include "core/managers/resource.h"
+#include "core/engine.h"
 
 std::thread* eng::resource_manager::thread;
 SharedQueue<ResourceTemplate> eng::resource_manager::toLoad(100);
 std::map<std::string, Resource> eng::resource_manager::loadedResources;
 
 void eng::resource_manager::loadAll(ResourceList list) {
-	for each(ResourceTemplate tmp in list) {
-		loadResource(tmp);
+	for(auto itr = list.begin(); itr != list.end(); itr++)
+	{
+		loadResource(*itr);
 	}
 }
 

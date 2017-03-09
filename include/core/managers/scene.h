@@ -32,9 +32,9 @@ public:
 	void addRootGameObject(GameObject&);
 	void removeRootGameObject(GameObject&);
 
-	void registerGameObject(GameObject&);
+	void registerGameObject(GameObject*);
 	void unregisterGameObject(GameObject&);
 
-	void registerComponent(Component&);
+	void registerComponent(Component*);
 	void unregisterComponent(Component&);
 };
