@@ -1,5 +1,7 @@
 #include "core/graphics/window.h"
 
+#include <functional>
+
 std::map<GLFWwindow*, Window*> Window::handleToPtr;
 
 Window::Window(WindowConfiguration config){

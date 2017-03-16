@@ -1,5 +1,4 @@
 #include "core/engine.h"
-
 /*
 void resize(Window* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_M && GLFW_MOD_CONTROL & mods) {
@@ -35,10 +34,35 @@ public:
 		if (lifetime < 0)
 			parent->disable();
 		lifetime -= delta * 10;
+
+		//auto itr = eng::resource_manager::loadedResources.find("readme");
+		//if (itr != eng::resource_manager::loadedResources.end()) {
+			//TextFileResource* res = dynamic_cast<TextFileResource*>(&(itr->second));
+			//if (res != nullptr) {
+			//	std::printf("Text file content:\n%s\n", res->text.c_str());
+			//}
+		//}
 	}
 };
 
-int main() {
+typedef int myint;
+
+int namespaceBased() {
+	GameObject go;
+	Triangle triangle(go);
+	Lifetime lifetime(go, 20);
+	go.addComponent(triangle);
+	go.addComponent(lifetime);
+	ResourceManager::registerLoader<std::string>([](std::string filepath) -> std::string { return "Ciao io sono una risorsa."; });
+    std::string test = "hello";
+
+	ResourceManager m;
+	m.loadResource<std::string>("Hello", test);
+
+	std::cout << m.getResource<std::string>("Hello")->c_str() << std::endl;
+	std::cout << m.getResource<GameObject>("BALL") << std::endl;
+
+	system("pause");
 	if (!eng::init()) return -1;
 
 	eng::configuration.windowConfiguration.title = "Engine Test";
@@ -46,23 +70,22 @@ int main() {
 
 	eng::create();
 
-	ResourceTemplate newRes{"","test",RESOURCE_TEXT_FILE};
-	eng::resource_manager::loadResource(newRes);
+	//ResourceTemplate newRes{"readme.md","readme",RESOURCE_TEXT_FILE};
+	//eng::resource_manager::loadResource(newRes);
 
 	Scene mainScene;
-	GameObject go(nullptr);
-	Triangle triangle(go);
-	Lifetime lifetime(go, 20);
-
-	go.addComponent(triangle);
-	go.addComponent(lifetime);
-
 	mainScene.addRootGameObject(go);
 
 	eng::setCurrentScene(mainScene);
 	//setup
-	eng::start();
-	eng::joinAll();//wait for all threads to finish
-	eng::terminate();
+    eng::startLoopJoinAndTerminate();
+    std::cout<<"Terminated."<<std::endl;
 	return 0;
 }
+
+
+int main() {
+	return namespaceBased();
+}
+
+

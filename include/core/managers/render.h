@@ -1,9 +1,20 @@
 #pragma once
-#include <thread>
-#include <unordered_set>
 
 #include "core/graphics/window.h"
+#include "core/threads/mythread.h"
 
+class RenderManager : public ThreadLoop{
+public:
+	Window window;
+	void init(WindowConfiguration);
+
+	void start();
+	void stop();
+
+	void loop();
+};
+
+/*
 namespace eng {
 	namespace render_manager {
 		extern std::thread* thread;
@@ -16,3 +27,4 @@ namespace eng {
 		extern void renderThreadMain();
 	}
 }
+*/

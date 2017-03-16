@@ -52,7 +52,7 @@ public:
 	std::unordered_set<Component*> components;
 
 	//If the parent is nullptr then this object is a root.
-	GameObject(GameObject* parent);
+	GameObject(GameObject* parent = nullptr);
 
 	void addChild(GameObject&);
 	void removeChild(GameObject&);

@@ -15,6 +15,12 @@ struct EngineConfiguration {
 
 namespace eng {
 	extern EngineConfiguration configuration;
+	
+	extern Thread render_thread;
+	extern Thread update_thread;
+
+	extern RenderManager renderer;
+	extern UpdateManager updater;
 
 	extern std::atomic_bool isRunning;
 	extern std::mutex engineMtx;
@@ -25,10 +31,13 @@ namespace eng {
 	
 	//Start all threads, create window etc..
 	extern bool init();
-
 	extern void create();
-	
-	extern void start();
+
+	/*
+	 * @brief Returns when all engine threads are terminated
+	 */
+	extern void startLoopJoinAndTerminate();
+	extern void startLoop();
 	extern void joinAll();
 	extern void terminate();
 }

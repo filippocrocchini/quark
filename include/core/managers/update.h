@@ -1,6 +1,12 @@
 #pragma once
-#include <thread>
+#include "core/threads/mythread.h"
 
+class UpdateManager : public ThreadLoop{
+public:
+	void loop();
+};
+
+/*
 namespace eng {
 	namespace update_manager {
 		extern std::thread* thread;
@@ -11,3 +17,4 @@ namespace eng {
 		extern void updateThreadMain();
 	}
 }
+*/

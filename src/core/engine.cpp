@@ -1,13 +1,19 @@
 #include <GL/glew.h>
-
 #include "core/engine.h"
 
 EngineConfiguration eng::configuration;
+
+RenderManager eng::renderer;
+UpdateManager eng::updater;
+
+Thread eng::render_thread(eng::renderer);
+Thread eng::update_thread(eng::updater);
 
 std::atomic_bool eng::isRunning;
 std::mutex eng::engineMtx;
 
 Scene* eng::_currentScene;
+
 
 void test(eng::input::MouseMoveEvent *e) {
 	std::printf("Mouse deltax: %f, deltay: %f.\n", e->deltaX, e->deltaY);
@@ -28,28 +34,37 @@ bool eng::init() {
 }
 
 void eng::create() {
-	render_manager::init(configuration.windowConfiguration);
-	input::bindCallbacks(render_manager::window);
+	renderer.init(configuration.windowConfiguration);
+	input::bindCallbacks(renderer.window);
 }
 
-void eng::start() {
+void eng::startLoop() {
 	//Initialize all game objects;
 	input::registerMouseMoveHandler(test);
 	
 	isRunning.store(true);
-	resource_manager::start();
-	render_manager::start();
-	update_manager::start();
+	render_thread.start();
+	update_thread.start();
+	
+	//resource_manager::start();
 }
 
 void eng::joinAll() {
-	resource_manager::join();
-	render_manager::join();
-	update_manager::join();
+
+	render_thread.join();
+    update_thread.join();
+
+	//resource_manager::join();
 }
 
 void eng::terminate() {
 	glfwTerminate();
+}
+
+void eng::startLoopJoinAndTerminate(){
+	startLoop();
+	joinAll();
+	terminate();
 }
 
 void eng::setCurrentScene(Scene& scene) {

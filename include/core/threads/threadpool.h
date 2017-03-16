@@ -6,7 +6,7 @@
 #include <exception>
 #include <condition_variable>
 
-#include "thread_safe_queue.h"
+#include "thread_safe_container.h"
 
 #define TASK_QUEUED 0
 #define TASK_FREE 1
