@@ -1,4 +1,5 @@
 #include "core/engine.h"
+#include "core/resources/textfile.h"
 /*
 void resize(Window* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_M && GLFW_MOD_CONTROL & mods) {
@@ -25,27 +26,28 @@ public:
 class Lifetime : public Updatable {
 public:
 	double lifetime;
+	bool done = false;
+
 	Lifetime(GameObject& parent, double lifetime) : Updatable(parent) {
 		this->lifetime = lifetime;
 	};
 	
 	void update(double delta) {
-		std::printf("lifetime: %f.\n", lifetime);
+		//std::printf("lifetime: %f.\n", lifetime);
 		if (lifetime < 0)
 			parent->disable();
-		lifetime -= delta * 10;
+		//lifetime -= delta * 10;
 
-		//auto itr = eng::resource_manager::loadedResources.find("readme");
-		//if (itr != eng::resource_manager::loadedResources.end()) {
-			//TextFileResource* res = dynamic_cast<TextFileResource*>(&(itr->second));
-			//if (res != nullptr) {
-			//	std::printf("Text file content:\n%s\n", res->text.c_str());
-			//}
-		//}
+		if (!done) {
+			TextFileResource *res = eng::resource_loader.getResource<TextFileResource>("readme");
+			if (res != nullptr) {
+				std::cout << res->text << std::endl;
+				done = true;
+			}
+		}
 	}
 };
 
-typedef int myint;
 
 int namespaceBased() {
 	GameObject go;
@@ -53,14 +55,8 @@ int namespaceBased() {
 	Lifetime lifetime(go, 20);
 	go.addComponent(triangle);
 	go.addComponent(lifetime);
-	ResourceManager::registerLoader<std::string>([](std::string filepath) -> std::string { return "Ciao io sono una risorsa."; });
-    std::string test = "hello";
 
-	ResourceManager m;
-	m.loadResource<std::string>("Hello", test);
-
-	std::cout << m.getResource<std::string>("Hello")->c_str() << std::endl;
-	std::cout << m.getResource<GameObject>("BALL") << std::endl;
+	eng::resource_loader.addResourceToQueue<TextFileResource>("readme", "readme.md");
 
 	system("pause");
 	if (!eng::init()) return -1;
@@ -83,9 +79,14 @@ int namespaceBased() {
 	return 0;
 }
 
+template<typename T>
+void test(int i) {
+	std::cout << i << " " << typeid(T).name() << std::endl;
+}
 
 int main() {
 	return namespaceBased();
 }
+
 
 

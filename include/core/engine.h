@@ -18,9 +18,11 @@ namespace eng {
 	
 	extern Thread render_thread;
 	extern Thread update_thread;
+	extern Thread resource_thread;
 
 	extern RenderManager renderer;
 	extern UpdateManager updater;
+	extern AsyncResourceManager resource_loader;
 
 	extern std::atomic_bool isRunning;
 	extern std::mutex engineMtx;

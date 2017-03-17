@@ -1,10 +1,14 @@
 #pragma once
+#include <iostream>
 #include <thread>
 #include <unordered_set>
 #include <unordered_map>
 #include <typeindex>
 #include <functional>
 #include <exception>
+
+#include "core/threads/thread_safe_container.h"
+#include "core/threads/mythread.h"
 
 #define RESOURCE_TEXT_FILE 0
 #define RESOURCE_BINARY_FILE 1
@@ -91,6 +95,7 @@ public:
 
 	template<typename T>
 	static void registerLoader(std::function<T(std::string)> loaderFunction) {
+
 		Loader<T> *loader = new Loader<T>();
 		loader->load = loaderFunction;
 		loaders.insert(std::pair<std::type_index, LoaderBase*>(typeid(T), loader));
@@ -139,6 +144,55 @@ private:
 		}
 
 		return true;
+	}
+};
+
+
+//Delete the ResourceTemplate* after loading
+class AsyncResourceManager : public ThreadLoop{
+public:
+	AsyncResourceManager(uint32_t);
+
+	void loop();
+
+	template<typename T>
+	bool addResourceToQueue(std::string name, std::string filepath, std::function<void(T&)> onLoad = [](T&) {}, std::function<void(void)> onFail = []() {}) {
+		if (manager.getResource<T>(name) != nullptr) return true;
+		return toload.push([this, name, filepath, onLoad, onFail]() {
+			this->loadResource<T>(name, filepath, onLoad, onFail);
+		});
+	}
+
+	template<typename T>
+	T* getResource(std::string name) {
+		return manager.getResource<T>(name);
+	}
+private:
+	struct ResourceBase {
+		std::string name;
+		std::string filepath;
+	};
+
+	template<typename T>
+	struct ResourceTemplate : public ResourceBase{
+		std::function<void(T&)> onLoad = [](T&) {};
+		std::function<void(void)> onFail = []() {};
+	};
+
+	typedef std::function<void(void)> ResourceLoadFunction;
+
+	ResourceManager manager;
+	SharedQueue<ResourceLoadFunction> toload;
+
+	template <typename T>
+	void loadResource(std::string name, std::string filepath, std::function<void(T&)> onLoad, std::function<void(void)> onFail) {
+		T* resource = manager.loadResource<T>(name, filepath);
+		if (resource != nullptr) {
+			onLoad(*resource);
+		}
+		else {
+			onFail();
+		}
 	}
 };
 

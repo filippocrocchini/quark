@@ -1,11 +1,14 @@
 #include <GL/glew.h>
 #include "core/engine.h"
+#include "core/resources/textfile.h"
 
 EngineConfiguration eng::configuration;
 
 RenderManager eng::renderer;
 UpdateManager eng::updater;
+AsyncResourceManager eng::resource_loader(100);
 
+Thread eng::resource_thread(eng::resource_loader);
 Thread eng::render_thread(eng::renderer);
 Thread eng::update_thread(eng::updater);
 
@@ -36,6 +39,8 @@ bool eng::init() {
 void eng::create() {
 	renderer.init(configuration.windowConfiguration);
 	input::bindCallbacks(renderer.window);
+
+	ResourceManager::registerLoader<TextFileResource>(TextFileResource::load);
 }
 
 void eng::startLoop() {
@@ -43,17 +48,19 @@ void eng::startLoop() {
 	input::registerMouseMoveHandler(test);
 	
 	isRunning.store(true);
+
 	render_thread.start();
 	update_thread.start();
-	
+	resource_thread.start();
+
 	//resource_manager::start();
 }
 
 void eng::joinAll() {
 
 	render_thread.join();
-    update_thread.join();
-
+	update_thread.join();
+	resource_thread.join();
 	//resource_manager::join();
 }
 
