@@ -1,4 +1,5 @@
-# Current Version alpha 1.0.0
+# DO NOT READ, THIS IS A PLACEHOLDER
+## Current Version alpha 1.0.0
 ## Changelog
 + Added Scene class.
 + Added GameObject class.
