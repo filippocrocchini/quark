@@ -79,11 +79,6 @@ int namespaceBased() {
 	return 0;
 }
 
-template<typename T>
-void test(int i) {
-	std::cout << i << " " << typeid(T).name() << std::endl;
-}
-
 int main() {
 	return namespaceBased();
 }
