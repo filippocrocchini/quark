@@ -23,7 +23,9 @@ struct UniformBase {
 
 template<typename T>
 class Uniform : public UniformBase {
-	void set(T value);
+	void set(T value) {
+		this->value = value;
+	}
 private:
 	T value;
 	Uniform() = default;
@@ -38,7 +40,7 @@ public:
 private:
 	Uniform();
 	Uniform(int shaderHandle, string name);
-	~Uniform();
+	~Uniform() = default;
 };
 
 class Shader {
