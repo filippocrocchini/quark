@@ -1,5 +1,8 @@
 #include "core/engine.h"
 #include "core/resources/textfile.h"
+
+
+
 /*
 void resize(Window* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_M && GLFW_MOD_CONTROL & mods) {
@@ -11,7 +14,7 @@ class Triangle : public Renderable {
 public:
 	Triangle(GameObject& parent) : Renderable(parent) {};
 	
-	void render() {		
+	void render() {
 		glColor3f(1, 1, 1);
 		glBegin(GL_TRIANGLES);
 		{

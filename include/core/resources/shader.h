@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include <unordered_map>
+#include <typeinfo>
+
+#include <GL/glcorearb.h>
 
 #define SHADER_UNINITIALIZED 0
 #define SHADER_COMPILED 1
@@ -23,12 +26,15 @@ class Uniform : public UniformBase {
 	void set(T value);
 private:
 	T value;
-	Uniform() = 0;
-	~Uniform() = 0;
+	Uniform() = default;
+	~Uniform() = default;
 };
 
 class Uniform<int> : public UniformBase{
 public:
+	void set(int value) {
+		glUniformi(0,0);
+	}
 private:
 	Uniform();
 	Uniform(int shaderHandle, string name);
@@ -45,13 +51,18 @@ public:
 	void use();
 
 	template<typename T>
-	int setUniform(string name, T value) {
+	void setUniform(string name, T value) {
 		auto uniformItr = uniforms.find(name);
-		if (uniformItr == uniforms.end())
+		if (uniformItr == uniforms.end()) {
 			throw std::runtime_error("Uniform " + name + " not found!");
+			return;
+		}
 		Uniform<T>* uniform = dynamic_cast<Uniform<T>*>(*uniformItr);
-		if (uniform == nullptr)
+		if (uniform == nullptr) {
 			throw std::runtime_error("Uniform type mismatch, uniform " + name + " is " + uniformItr->second->type.name() + " you passed " + typeid(T).name() + ".");
+			return;
+		}
+		uniform->set(value);
 	}
 
 	static Shader load(string filepath);
