@@ -1,17 +1,21 @@
 #pragma once
+
+#include <GLEW\glew.h>
+
 #include <iostream>
 #include <unordered_map>
 #include <typeinfo>
 
-#include <GL/glcorearb.h>
+enum ShaderState {
+	SHADER_UNINITIALIZED,
+	SHADER_COMPILED,
+	SHADER_LINKED
+};
 
-#define SHADER_UNINITIALIZED 0
-#define SHADER_COMPILED 1
-#define SHADER_LINKED 2
-#define SHADER_LOADING_FAILED 3
-
-#define UNIFORM_NOT_FOUND 4
-#define INVALID_UNIFORM_TYPE 5
+enum UniformState {
+	UNIFORM_NOT_FOUND,
+	INVALID_UNIFORM_TYPE
+};
 
 using std::string;
 
@@ -32,10 +36,11 @@ private:
 	~Uniform() = default;
 };
 
+template<>
 class Uniform<int> : public UniformBase{
 public:
 	void set(int value) {
-		glUniformi(0,0);
+		glUniform1i(0,0);
 	}
 private:
 	Uniform();
@@ -45,10 +50,10 @@ private:
 
 class Shader {
 public:
-	int state = SHADER_UNINITIALIZED;
+	ShaderState state = SHADER_UNINITIALIZED;
 	int glHandle = 0;
-	
-	~Shader();
+
+	~Shader() = default;
 
 	void use();
 
@@ -68,10 +73,10 @@ public:
 	}
 
 	static Shader load(string filepath);
+	string vertex;
 private:
 	Shader() = default;
 
-	string vertex;
 	string geometry;
 	string fragment;
 	string debuglog;

@@ -15,7 +15,7 @@ struct EngineConfiguration {
 
 namespace eng {
 	extern EngineConfiguration configuration;
-	
+
 	extern Thread render_thread;
 	extern Thread update_thread;
 	extern Thread resource_thread;
@@ -30,7 +30,7 @@ namespace eng {
 	extern Scene* _currentScene;
 
 	extern void setCurrentScene(Scene&);
-	
+
 	//Start all threads, create window etc..
 	extern bool init();
 	extern void create();

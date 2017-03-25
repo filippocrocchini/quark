@@ -1,6 +1,7 @@
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 #include "core/engine.h"
 #include "core/resources/textfile.h"
+#include "core/resources/shader.h"
 
 EngineConfiguration eng::configuration;
 
@@ -41,6 +42,7 @@ void eng::create() {
 	input::bindCallbacks(renderer.window);
 
 	ResourceManager::registerLoader<TextFileResource>(TextFileResource::load);
+	ResourceManager::registerLoader<Shader>(Shader::load);
 }
 
 void eng::startLoop() {

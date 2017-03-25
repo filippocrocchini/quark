@@ -20,7 +20,7 @@ public:
 	~CacheBase() = default;
 };
 
-//@Unsafe Not thread safe 
+//@Unsafe Not thread safe
 template <class T>
 class ResourceCache : public CacheBase{
 public:
@@ -156,7 +156,7 @@ public:
 	void loop();
 
 	template<typename T>
-	bool addResourceToQueue(std::string name, std::string filepath, std::function<void(T&)> onLoad = [](T&) {}, std::function<void(void)> onFail = []() {}) {
+	bool addResourceToQueue(std::string name, std::string filepath, std::function<void(T&)> onLoad, std::function<void(void)> onFail) {
 		if (manager.getResource<T>(name) != nullptr) return true;
 		return toload.push([this, name, filepath, onLoad, onFail]() {
 			this->loadResource<T>(name, filepath, onLoad, onFail);
@@ -171,12 +171,6 @@ private:
 	struct ResourceBase {
 		std::string name;
 		std::string filepath;
-	};
-
-	template<typename T>
-	struct ResourceTemplate : public ResourceBase{
-		std::function<void(T&)> onLoad = [](T&) {};
-		std::function<void(void)> onFail = []() {};
 	};
 
 	typedef std::function<void(void)> ResourceLoadFunction;
@@ -195,4 +189,3 @@ private:
 		}
 	}
 };
-

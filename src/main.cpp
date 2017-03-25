@@ -1,7 +1,6 @@
+#include "core/resources/shader.h"
 #include "core/engine.h"
 #include "core/resources/textfile.h"
-
-
 
 /*
 void resize(Window* window, int key, int scancode, int action, int mods) {
@@ -13,7 +12,7 @@ void resize(Window* window, int key, int scancode, int action, int mods) {
 class Triangle : public Renderable {
 public:
 	Triangle(GameObject& parent) : Renderable(parent) {};
-	
+
 	void render() {
 		glColor3f(1, 1, 1);
 		glBegin(GL_TRIANGLES);
@@ -34,7 +33,7 @@ public:
 	Lifetime(GameObject& parent, double lifetime) : Updatable(parent) {
 		this->lifetime = lifetime;
 	};
-	
+
 	void update(double delta) {
 		//std::printf("lifetime: %f.\n", lifetime);
 		if (lifetime < 0)
@@ -59,7 +58,8 @@ int namespaceBased() {
 	go.addComponent(triangle);
 	go.addComponent(lifetime);
 
-	eng::resource_loader.addResourceToQueue<TextFileResource>("readme", "readme.md");
+	eng::resource_loader.addResourceToQueue<TextFileResource>("readme", "readme.md", [](TextFileResource&){}, [](){});
+	eng::resource_loader.addResourceToQueue<Shader>("basic", "assets/basic", [](Shader&) {}, []() {});
 
 	system("pause");
 	if (!eng::init()) return -1;
@@ -85,6 +85,3 @@ int namespaceBased() {
 int main() {
 	return namespaceBased();
 }
-
-
-
