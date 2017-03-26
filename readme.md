@@ -1,6 +1,7 @@
 # DO NOT READ, THIS IS A PLACEHOLDER
 ## Current Version alpha 1.0.0
 ## Changelog
++ You are not supposed to read this (just saying).
 + Added Scene class.
 + Added GameObject class.
 + Added Component interface.
