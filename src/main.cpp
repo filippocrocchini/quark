@@ -12,23 +12,55 @@ void resize(Window* window, int key, int scancode, int action, int mods) {
 class Triangle : public Renderable {
 public:
 	Triangle(GameObject& parent) : Renderable(parent) {};
+	bool done = false;
+
+    GLuint vao;
+    float data[6] = {0.5, 0.5, 0.5, -0.5, -0.5, 0};
+    GLubyte ind[3] = {0,1,2};
 
 	void render() {
-		glColor3f(1, 1, 1);
-		glBegin(GL_TRIANGLES);
-		{
-			glVertex2f(-1, -1);
-			glVertex2f( 1, -1);
-			glVertex2f( 1,  1);
-		}
-		glEnd();
+        if (!done) {
+			auto res = eng::resource_loader.getResource<Shader>("basic");
+			if (res != nullptr) {
+                for (auto itr = res->uniforms.begin(); itr != res->uniforms.end(); itr++) {
+				    std::cout << itr->first << " : " << itr->second->getType().name() << std::endl;
+                }
+                res->use();
+                res->setUniform("u_color", Vec3{0.1f,0.1f,.0f});
+				done = true;
+			}
+
+            glGenVertexArrays(1, &vao);
+     	    glBindVertexArray(vao);
+     	
+     	    { // ------  VERTICES  ------
+                GLuint vert;
+                glGenBuffers(1, &vert);
+	            glBindBuffer(GL_ARRAY_BUFFER, vert);
+	            glBufferData(GL_ARRAY_BUFFER, sizeof(float)*6, data, GL_STATIC_DRAW);
+	            glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+	            glEnableVertexAttribArray(0);
+     	    } // ------  VERTICES  ------
+        
+            { // ------  ELEMENTS  ------
+                GLuint elem;
+                glGenBuffers(1, &elem);
+	            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elem);
+	            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*3, ind, GL_STATIC_DRAW);
+            } // ------  ELEMENTS  ------
+        
+            glBindVertexArray(0);
+        }
+
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, 0);
+        glBindVertexArray(vao);
 	}
 };
 
 class Lifetime : public Updatable {
 public:
 	double lifetime;
-	bool done = false;
 
 	Lifetime(GameObject& parent, double lifetime) : Updatable(parent) {
 		this->lifetime = lifetime;
@@ -38,15 +70,7 @@ public:
 		//std::printf("lifetime: %f.\n", lifetime);
 		if (lifetime < 0)
 			parent->disable();
-		//lifetime -= delta * 10;
-
-		if (!done) {
-			TextFileResource *res = eng::resource_loader.getResource<TextFileResource>("readme");
-			if (res != nullptr) {
-				std::cout << res->text << std::endl;
-				done = true;
-			}
-		}
+		lifetime -= delta * 10;
 	}
 };
 
@@ -58,14 +82,17 @@ int namespaceBased() {
 	go.addComponent(triangle);
 	go.addComponent(lifetime);
 
-	eng::resource_loader.addResourceToQueue<TextFileResource>("readme", "readme.md", [](TextFileResource&){}, [](){});
-	eng::resource_loader.addResourceToQueue<Shader>("basic", "assets/basic", [](Shader&) {}, []() {});
+	eng::resource_loader.addResourceToQueue<TextFileResource>("readme", "readme.md", [](std::shared_ptr<TextFileResource>){});
+	eng::resource_loader.addResourceToQueue<Shader>("basic", "assets/basic", [](std::shared_ptr<Shader>) {});
 
 	system("pause");
 	if (!eng::init()) return -1;
 
 	eng::configuration.windowConfiguration.title = "Engine Test";
 	eng::configuration.windowConfiguration.antialiasing = 4;
+    eng::configuration.windowConfiguration.openglMajorVersion = 4;
+    eng::configuration.windowConfiguration.openglMinorVersion = 4;
+    eng::configuration.windowConfiguration.openglProfile = GLFW_OPENGL_CORE_PROFILE;
 
 	eng::create();
 

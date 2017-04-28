@@ -1,12 +1,22 @@
+#include <GLEW\glew.h>
+
 #include "core/managers/render.h"
 #include "core/engine.h"
+
 
 void RenderManager::init(WindowConfiguration config) {
 	window.setConfiguration(config);
 }
 
 void RenderManager::start() {
-	window.create();
+    window.create();
+
+    //@Unsafe, if there is more than one window the context needs to be bound in the while loop
+    window.bindContext();
+    
+    if (!glewInit()) {
+		std::fprintf(stderr, "Engine: Failed to initialize GLEW.\n");
+    }
 }
 
 void RenderManager::stop() {
@@ -17,14 +27,14 @@ void RenderManager::stop() {
 void RenderManager::loop() {
 	start();
 
-	while (eng::isRunning.load()) {
-		window.bindContext();
-		window.pollEvents();
+	while (eng::isRunning.load() && window.status == WINDOW_OK) {
+        window.pollEvents();
 
 		if (window.shouldClose()) {
 			eng::engineMtx.lock();
 			eng::isRunning.store(false);
 			eng::engineMtx.unlock();
+            break;
 		}
 		if (eng::_currentScene != nullptr) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

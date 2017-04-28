@@ -28,12 +28,6 @@ bool eng::init() {
 		std::fprintf(stderr, "Engine: Failed to initialize GLFW.\n");
 		return false;
 	}
-
-	if (!glewInit()) {
-		std::fprintf(stderr, "Engine: Failed to initialize GLEW.\n");
-		return false;
-	}
-
 	return true;
 }
 
@@ -63,7 +57,9 @@ void eng::joinAll() {
 	render_thread.join();
 	update_thread.join();
 	resource_thread.join();
-	//resource_manager::join();
+
+    std::cout << "Joined all threads.\n";
+    // resource_manager::join();
 }
 
 void eng::terminate() {

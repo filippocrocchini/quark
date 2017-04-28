@@ -8,7 +8,7 @@
 
 #include <assimp/scene.h>
 
-std::unordered_map<std::type_index, LoaderBase*> ResourceManager::loaders;
+std::unordered_map<std::type_index, std::shared_ptr<LoaderBase>> ResourceManager::loaders;
 
 AsyncResourceManager::AsyncResourceManager(uint32_t queueSize) {
 	toload.setMaxSize(queueSize);

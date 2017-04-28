@@ -15,6 +15,7 @@ set(GLEW_INCLUDE_FOLDER "glew/include" CACHE PATH "Path to the folder containing
 set(GLFW_INCLUDE_FOLDER "glfw/include" CACHE PATH "Path to the folder containing GLFW headers.")
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
+
 file(GLOB_RECURSE INCLUDE_FILES include/*.h)
 
 set(ASSIMP_DLL "libassimp" CACHE STRING "Assimp library name.")

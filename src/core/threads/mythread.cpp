@@ -12,5 +12,6 @@ void Thread::start() {
 void Thread::join() {
 	worker->join();
 	delete worker;
+    worker = nullptr;
 }
 

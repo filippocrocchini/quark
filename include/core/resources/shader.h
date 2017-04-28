@@ -1,10 +1,34 @@
 #pragma once
 
-#include <GLEW\glew.h>
+#include <GLEW/glew.h>
 
+#include <memory>
 #include <iostream>
 #include <unordered_map>
-#include <typeinfo>
+#include <typeindex>
+
+class Shader;
+
+struct Vec2 {
+	float x, y;
+};
+
+struct Vec3 {
+	float x, y, z;
+};
+
+struct Vec4 {
+	float x, y, z, w;
+};
+
+enum UniformType {
+	UNKNOWN,
+	INT,
+	FLOAT,
+	VEC2,
+	VEC3,
+	VEC4
+};
 
 enum ShaderState {
 	SHADER_UNINITIALIZED,
@@ -12,48 +36,107 @@ enum ShaderState {
 	SHADER_LINKED
 };
 
-enum UniformState {
-	UNIFORM_NOT_FOUND,
-	INVALID_UNIFORM_TYPE
-};
-
 using std::string;
 
-struct UniformBase {
-	std::type_info type;
+class UniformBase {
+public:
+    UniformBase(std::shared_ptr<Shader> parent, std::type_index type,const std::string name) : parent(parent), type(type), name(name){
+        location = glGetUniformLocation(parent->glHandle, name.c_str());
+    }
+    virtual ~UniformBase() {};
+    bool isActive() { return active; }
+    std::type_index getType() { return type; }
+    int getLocation() { return location; }
+    const std::string& getName() { return name; }
+
+protected:	
+    std::type_index type;
 	int location;
 	bool active;
+	std::string name;
+    std::shared_ptr<Shader> parent;
 };
 
 template<typename T>
-class Uniform : public UniformBase {
-	void set(T value) {
-		this->value = value;
-	}
+class Uniform{
 private:
-	T value;
-	Uniform() = default;
+    Uniform() = default;
 	~Uniform() = default;
 };
+
+//TODO: Uniform::set(T val) has to be implemented so that when invoked it sets the uniform in the parent shader program.
 
 template<>
 class Uniform<int> : public UniformBase{
 public:
-	void set(int value) {
-		glUniform1i(0,0);
-	}
-private:
-	Uniform();
-	Uniform(int shaderHandle, string name);
+    Uniform(std::shared_ptr<Shader> parent,const string name) : UniformBase(parent, typeid(int), name){}
+
 	~Uniform() = default;
+    void set(int value) { this->value = value; }
+private:
+    int value;
 };
+
+template<>
+class Uniform<float> : public UniformBase{
+public:
+	Uniform(std::shared_ptr<Shader> parent,const string name) : UniformBase(parent, typeid(float), name){}
+
+	~Uniform() = default;
+	void set(float value){ this->value = value; }
+private:
+    float value;
+};
+
+template<>
+class Uniform<Vec2> : public UniformBase{
+public:
+	Uniform(std::shared_ptr<Shader> parent,const string name) : UniformBase(parent, typeid(Vec2), name){}
+
+	~Uniform() = default;
+	void set(Vec2 value){ this->value = value; }
+private:
+    Vec2 value;
+};
+
+template<>
+class Uniform<Vec3> : public UniformBase{
+public:
+	Uniform(std::shared_ptr<Shader> parent,const string name) : UniformBase(parent, typeid(Vec3), name){}
+
+	~Uniform() = default;
+	void set(Vec3 value){
+        this->value = value;
+        glUniform3f(location, value.x, value.y, value.z);
+    }
+private:
+    Vec3 value;
+};
+
+template<>
+class Uniform<Vec4> : public UniformBase{
+public:
+	Uniform(std::shared_ptr<Shader> parent,const string name) : UniformBase(parent, typeid(Vec4), name){}
+
+	~Uniform() = default;
+	void set(Vec4 value){ this->value = value; }
+private:
+    Vec4 value;
+};
+
 
 class Shader {
 public:
 	ShaderState state = SHADER_UNINITIALIZED;
 	int glHandle = 0;
 
-	~Shader() = default;
+	Shader() = default;
+	//delete the shader program and the shaders and also the uniforms
+	~Shader() {
+		for (auto i = uniforms.begin(); i != uniforms.end(); i++) {
+			delete i->second;
+		}
+	}
 
 	void use();
 
@@ -61,25 +144,33 @@ public:
 	void setUniform(string name, T value) {
 		auto uniformItr = uniforms.find(name);
 		if (uniformItr == uniforms.end()) {
-			throw std::runtime_error("Uniform " + name + " not found!");
+			std::cerr << "Uniform " << name << " not found!\n";
 			return;
 		}
-		Uniform<T>* uniform = dynamic_cast<Uniform<T>*>(*uniformItr);
+		Uniform<T>* uniform = dynamic_cast<Uniform<T>*>(uniformItr->second);
 		if (uniform == nullptr) {
-			throw std::runtime_error("Uniform type mismatch, uniform " + name + " is " + uniformItr->second->type.name() + " you passed " + typeid(T).name() + ".");
+            std::cerr << "Uniform type mismatch, uniform " << name << " is " << uniformItr->second->getType().name() << ", you passed " << typeid(T).name() << ".\n";
 			return;
 		}
 		uniform->set(value);
 	}
 
-	static Shader load(string filepath);
-	string vertex;
+	static std::shared_ptr<Shader> load(string filepath);
+	std::unordered_map < string, UniformBase* > uniforms;
 private:
-	Shader() = default;
+    bool built = false;
+    bool compilation_failed = false;
+    bool linkage_failed = false;
 
+	string vertex;
 	string geometry;
 	string fragment;
-	string debuglog;
+	string compileLogs[3];
+    string linkLog;
 
-	std::unordered_map < string, UniformBase* > uniforms;
+    GLuint vertexHandle;
+    GLuint fragmentHandle;
+    GLuint geometryHandle;
+
+    bool build();
 };

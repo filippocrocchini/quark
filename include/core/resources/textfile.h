@@ -4,7 +4,7 @@
 class TextFileResource {
 public:
 	std::string text;
-	static TextFileResource load(std::string filepath);
-private:
+	static std::shared_ptr<TextFileResource> load(std::string filepath);
 	TextFileResource() = default;
+private:
 };

@@ -4,8 +4,11 @@
 #include <iostream>
 #include <map>
 
-#define WINDOW_CREATION_FAILED 1
-#define WINDOW_DESTROYED 2
+enum WindowStatus {
+    WINDOW_OK,
+	WINDOW_CREATION_FAILED,
+	WINDOW_DESTROYED
+};
 
 class Window;
 
@@ -19,15 +22,15 @@ typedef void(*ScrollCallback)(Window*, double, double);
 
 struct WindowConfiguration {
 	std::string title = "Default window name";
-	uint32_t width = 1280;
-	uint32_t height = 720;
-	uint32_t openglProfile = GLFW_OPENGL_ANY_PROFILE;
-	uint16_t antialiasing = 0;
-	uint16_t openglMajorVersion = 1;
-	uint16_t openglMinorVersion = 1;
-	uint16_t monitor = 0;
-	uint16_t xPosition = 0;
-	uint16_t yPosition = 0;
+	unsigned width = 1280;
+	unsigned height = 720;
+	unsigned openglProfile = GLFW_OPENGL_ANY_PROFILE;
+	unsigned antialiasing = 0;
+	unsigned openglMajorVersion = 1;
+	unsigned openglMinorVersion = 1;
+	unsigned monitor = 0;
+	unsigned xPosition = 0;
+	unsigned yPosition = 0;
 
 	bool vsync = true;
 	bool resizable = true;
@@ -40,7 +43,7 @@ class Window {
 public:
 	WindowConfiguration config;
 	GLFWwindow* windowHandle;
-	uint16_t status;
+	WindowStatus status;
 
 	ResizeCallback resizeCallback = nullptr;
 	KeyCallback keyCallback = nullptr;
@@ -51,9 +54,9 @@ public:
 	ScrollCallback scrollCallback = nullptr;
 
 	Window() = default;
-	Window(WindowConfiguration);
+	Window(WindowConfiguration&);
 	
-	void setConfiguration(WindowConfiguration);
+	void setConfiguration(WindowConfiguration&);
 
 	void bindContext();
 	void releaseContext();
@@ -62,8 +65,8 @@ public:
 	void swapBuffers();
 
 	void setTitle(std::string);
-	void setSize(uint32_t width, uint32_t height);
-	void setPosition(uint32_t x, uint32_t y);
+	void setSize(unsigned width, unsigned height);
+	void setPosition(unsigned x, unsigned y);
 
 	void iconify();
 	void restore();

@@ -4,12 +4,10 @@
 
 std::map<GLFWwindow*, Window*> Window::handleToPtr;
 
-Window::Window(WindowConfiguration config){
-	setConfiguration(config);
+Window::Window(WindowConfiguration& config) : config(config){
 }
 
-
-void Window::setConfiguration(WindowConfiguration config) {
+void Window::setConfiguration(WindowConfiguration& config) {
 	this->config = config;
 }
 
@@ -34,13 +32,13 @@ void Window::setTitle(std::string title){
 	glfwSetWindowTitle(windowHandle, title.c_str());
 }
 
-void Window::setSize(uint32_t width, uint32_t height){
+void Window::setSize(unsigned width, unsigned height){
 	config.width = width;
 	config.height = height;
 	resize(windowHandle, width, height);
 }
 
-void Window::setPosition(uint32_t x, uint32_t y){
+void Window::setPosition(unsigned x, unsigned y){
 	config.xPosition = x;
 	config.yPosition = y;
 	glfwSetWindowPos(windowHandle, x, y);
@@ -63,6 +61,8 @@ void Window::show(){
 }
 
 bool Window::shouldClose(){
+    if (status != WINDOW_OK)
+        return true;
 	return glfwWindowShouldClose(windowHandle);
 }
 
@@ -112,6 +112,8 @@ void Window::create() {
 	releaseContext();
 
 	Window::handleToPtr.insert(std::pair<GLFWwindow*, Window*>(windowHandle, this));
+
+    status = WINDOW_OK;
 }
 
 void Window::destroy(){
@@ -119,6 +121,7 @@ void Window::destroy(){
 
 	if(Window::handleToPtr.size() > 0 && Window::handleToPtr.find(windowHandle) != Window::handleToPtr.end())
 		Window::handleToPtr.erase(windowHandle);
+	status = WINDOW_DESTROYED;
 }
 
 void Window::recreate(){

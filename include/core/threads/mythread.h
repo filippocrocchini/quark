@@ -1,6 +1,5 @@
 #pragma once
 
-#include <unordered_set>
 #include <thread>
 
 class ThreadLoop{
@@ -12,6 +11,10 @@ class Thread{
 public:
 	ThreadLoop *looper;
 	Thread(ThreadLoop &looper);
+	~Thread() {
+		if (worker != nullptr)
+			delete worker;
+	}
 
 	void start();
 	void join();
