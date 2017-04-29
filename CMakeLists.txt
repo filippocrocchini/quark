@@ -12,6 +12,7 @@ set(GLFW_LIB_FOLDER "glfw/bin" CACHE PATH "Path to the folder containing GLFW3 d
 
 set(ASSIMP_INCLUDE_FOLDER "assimp/include" CACHE PATH "Path to the folder containing ASSIMP headers.")
 set(GLEW_INCLUDE_FOLDER "glew/include" CACHE PATH "Path to the folder containing GLEW headers.")
+set(GLFW_INCLUDE_FOLDER "glfw/include" CACHE PATH "Path to the folder containing GLFW headers.")
 set(GLM_INCLUDE_FOLDER "glm/include" CACHE PATH "Path to the folder containing GLM headers.")
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
