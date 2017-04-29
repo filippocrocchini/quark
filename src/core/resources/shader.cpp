@@ -5,9 +5,6 @@
 #include "core/resources/shader.h"
 #include "core/utils.h"
 
-void findUniforms(std::shared_ptr<Shader> s, const std::string& content);
-UniformType parseType(const std::string& str);
-
 bool compileShader(GLuint type, GLuint& handle, const std::string& source, std::string& compileLog) {
     handle = glCreateShader(type);
 
@@ -23,12 +20,14 @@ bool compileShader(GLuint type, GLuint& handle, const std::string& source, std::
 
         glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &log_size);
 
-        std::vector<char> log(log_size);
+        GLchar* log = new GLchar[log_size]();
 
-        glGetShaderInfoLog(handle, log_size, &log_size, &log[0]);
+        glGetShaderInfoLog(handle, log_size, &log_size, log);
 
-        compileLog = &log[0];
-        std::cerr << &log[0] << std::endl;
+        compileLog = std::string(log);
+        std::cerr << log << std::endl;
+
+        delete[] log;
     
         glDeleteShader(handle);
         return false;
@@ -36,19 +35,22 @@ bool compileShader(GLuint type, GLuint& handle, const std::string& source, std::
     return true;
 }
 
-
-bool Shader::build() {
-
+bool Shader::compile() {
     if (!compileShader(GL_VERTEX_SHADER, vertexHandle, vertex, compileLogs[0]) ||
         !compileShader(GL_FRAGMENT_SHADER, fragmentHandle, fragment, compileLogs[1]) ||
         (!geometry.empty() && !compileShader(GL_GEOMETRY_SHADER, geometryHandle, geometry, compileLogs[2]))
-        ) {
-        compilation_failed = true;
+        )
+        return false;
+    else
+        return true;
+}
+
+bool Shader::link() {
+    glHandle = glCreateProgram();
+    if (glHandle == 0) {
+        std::cerr << "Could not create the shader program. Probably the context in not valid." << std::endl;
         return false;
     }
-
-    glHandle = glCreateProgram();
-
     glAttachShader(glHandle, vertexHandle);
     if(geometryHandle != 0)
         glAttachShader(glHandle, geometryHandle);
@@ -57,41 +59,126 @@ bool Shader::build() {
     glLinkProgram(glHandle);
 
     GLint isLinked = 0;
-    glGetProgramiv(glHandle, GL_LINK_STATUS, (int *)&isLinked);
+    glGetProgramiv(glHandle, GL_LINK_STATUS, &isLinked);
+
     if(isLinked == GL_FALSE) {
 	    GLint log_size = 0;
 
         glGetProgramiv(glHandle, GL_INFO_LOG_LENGTH, &log_size);
 
-        std::vector<char> log(log_size);
+        GLchar* log = new GLchar[log_size]();
 
         glGetProgramInfoLog(glHandle, log_size, &log_size, &log[0]);
-        linkLog = &log[0];
-        std::cerr << &log[0] << std::endl;
-	
+
+        linkLog = std::string(log);
+        std::cerr << log << std::endl;
+
+        delete[] log;
+
 	    glDeleteProgram(glHandle);
 	    glDeleteShader(vertexHandle);
         if(geometryHandle != 0)
 	        glDeleteShader(geometryHandle);
         glDeleteShader(fragmentHandle);
-        linkage_failed = true;
 	    return false;
     }
 
     glDetachShader(glHandle, vertexHandle);
     if(geometryHandle != 0)
-	        glDetachShader(glHandle, geometryHandle);
+	    glDetachShader(glHandle, geometryHandle);
     glDetachShader(glHandle, fragmentHandle);
 
     return true;
 }
 
-std::shared_ptr<Shader> Shader::load(string filepath) {
+bool Shader::validate() {
+    glValidateProgram(glHandle);
+    
+    GLint validated = 0;
+    glGetProgramiv(glHandle, GL_VALIDATE_STATUS, &validated);
+    if(validated == GL_FALSE) {
+	    GLint log_size = 0;
+        glGetProgramiv(glHandle, GL_INFO_LOG_LENGTH, &log_size);
+
+        GLchar* log = new GLchar[log_size]();
+
+        glGetProgramInfoLog(glHandle, log_size, &log_size, &log[0]);
+        std::cerr << &log[0] << std::endl;
+
+        delete[] log;
+
+	    return false;
+    }
+    return true;
+}
+
+void Shader::fetchUniforms() {
+    GLint count;
+    glGetProgramiv(glHandle, GL_ACTIVE_UNIFORMS, &count);
+    
+    GLint maxLength;
+    glGetProgramiv(glHandle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength);
+
+    GLchar* name = new GLchar[maxLength]();
+    GLint size;
+    GLenum type;
+
+    IUniform* uniform;
+
+    for (GLuint i = 0; i < (unsigned)count; ++i) {
+        glGetActiveUniform(glHandle, i, maxLength, nullptr, &size, &type, name);
+        switch (type) {
+        case GL_SAMPLER_2D:
+        case GL_INT:
+            uniform = new Uniform<int>(i, size, name);
+            break;
+        case GL_FLOAT:
+            uniform = new Uniform<float>(i, size, name);
+            break;
+        case GL_FLOAT_VEC2:
+            uniform = new Uniform<glm::vec2>(i, size, name);
+            break;
+        case GL_FLOAT_VEC3:
+            uniform = new Uniform<glm::vec3>(i, size, name);
+            break;
+        case GL_FLOAT_VEC4:
+            uniform = new Uniform<glm::vec4>(i, size, name);
+            break;
+        case GL_FLOAT_MAT2:
+            uniform = new Uniform<glm::mat2>(i, size, name);
+            break;
+        case GL_FLOAT_MAT3:
+            uniform = new Uniform<glm::mat3>(i, size, name);
+            break;
+        case GL_FLOAT_MAT4:
+            uniform = new Uniform<glm::mat4>(i, size, name);
+            break;
+        default:
+            std::cerr << "Uniform " << name << " has not been fetched." << std::endl;
+            continue;
+        }
+        uniforms.insert(std::make_pair(std::string(name), uniform));
+    }
+
+    delete[] name;
+}
+
+bool Shader::build() {
+    if (compilation_failed = !compile()) return false;
+    if (linkage_failed = !link()) return false;
+    if (validation_failed = !validate()) return false;
+
+    fetchUniforms();
+
+    return true;
+}
+
+std::shared_ptr<Shader> Shader::load(std::string filepath) {
 	std::shared_ptr<Shader> s = std::make_shared<Shader>();
 
-	string vertexPath = filepath + ".v";
-	string geometryPath = filepath + ".g";
-	string fragmentPath = filepath + ".f";
+	std::string vertexPath = filepath + ".v";
+	std::string geometryPath = filepath + ".g";
+	std::string fragmentPath = filepath + ".f";
 
 	{
 		bool vertex, geometry, fragment;
@@ -105,82 +192,19 @@ std::shared_ptr<Shader> Shader::load(string filepath) {
 			throw std::runtime_error("No fragment shader has been found.");
 	}
 
-	findUniforms(s, s->vertex);
-	findUniforms(s, s->fragment);
-
-    if(!s->geometry.empty())
-	    findUniforms(s, s->geometry);
-
 	return s;
 }
 
 
 void Shader::use() {
-    if (compilation_failed || linkage_failed)
-        return;
-
-    if (!built)
-        built = build();
+    if (!built) {
+        if ( compilation_failed || linkage_failed || validation_failed )
+            return;
+        else 
+            built = build();
+    }
     
-    glUseProgram(this->glHandle);
+    glUseProgram(glHandle);
 }
 
-void findUniforms(std::shared_ptr<Shader> s, const std::string& content) {
-	if (content.empty()) return;
-	StringList lines = tokenize(content, "\n");
 
-	std::string firstToken;
-	StringList lineTokens;
-	
-	std::size_t offset = 0;
-
-	for (auto line = lines.begin(); line != lines.end(); line++) {
-		offset = 0;
-		if (!findToken(*line, " ", offset, firstToken))continue;
-		if (firstToken == "uniform") {
-			lineTokens = tokenize(line->substr(offset), " ;");
-			if (lineTokens.size() >= 2) {
-				UniformType type = parseType(lineTokens[0]);
-				std::cout << "Type: " << lineTokens[0] << std::endl;
-				switch(type){
-				case INT:
-					s->uniforms.insert(std::pair<std::string, UniformBase*>(lineTokens[1], new Uniform<int>(s, lineTokens[1])));
-					break;
-				case FLOAT:
-					s->uniforms.insert(std::pair<std::string, UniformBase*>(lineTokens[1], new Uniform<float>(s, lineTokens[1])));
-					break;
-				case VEC2:
-					s->uniforms.insert(std::pair<std::string, UniformBase*>(lineTokens[1], new Uniform<Vec2>(s, lineTokens[1])));
-					break;
-				case VEC3:
-					s->uniforms.insert(std::pair<std::string, UniformBase*>(lineTokens[1], new Uniform<Vec3>(s, lineTokens[1])));
-					break;
-				case VEC4:
-					s->uniforms.insert(std::pair<std::string, UniformBase*>(lineTokens[1], new Uniform<Vec4>(s, lineTokens[1])));
-					break;
-				default:
-					std::cerr << "Unknown uniform type at line: " << std::endl;
-					if(line-lines.begin()>=1)
-						std::cerr << "    " << *(line-1) << std::endl;
-					std::cerr << "--> " << *(line) << std::endl;
-					if(lines.end()-line>1)
-						std::cerr << "    " << *(line+1) << std::endl;
-				}
-			}
-		}
-	}
-}
-
-UniformType parseType(const std::string& str) {
-	if (str == "int")
-		return INT;
-	if (str == "float")
-		return FLOAT;
-	if (str == "vec2")
-		return VEC2;
-	if (str == "vec3")
-		return VEC3;
-	if (str == "vec4")
-		return VEC4;
-	return UNKNOWN;
-}

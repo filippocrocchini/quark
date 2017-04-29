@@ -128,14 +128,13 @@ private:
 			return false;
 		}
 
-		try {
-			std::shared_ptr<T> result = loader->load(filepath);
-			cache.cacheResource(name, result);
-		}
-		catch (std::exception e) {
-			std::cerr << e.what() << std::endl;
-			return false;
-		}
+		
+		std::shared_ptr<T> result = loader->load(filepath);
+
+        if (result == nullptr)
+            return false;
+
+		cache.cacheResource(name, result);
 
 		return true;
 	}
@@ -148,6 +147,11 @@ public:
 	AsyncResourceManager(uint32_t);
 
 	void loop();
+
+    template<typename T>
+    bool addResourceToQueue(std::string name, std::string filepath) {
+        return addResourceToQueue<T>(name, filepath, [](std::shared_ptr<T>) {}, []() {});
+    }
 
     template<typename T>
 	bool addResourceToQueue(std::string name, std::string filepath, std::function<void(std::shared_ptr<T>)> onLoad) {

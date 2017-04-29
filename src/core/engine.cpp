@@ -2,6 +2,8 @@
 #include "core/engine.h"
 #include "core/resources/textfile.h"
 #include "core/resources/shader.h"
+#include "core/resources/texture.h"
+#include "core/resources/mesh.h"
 
 EngineConfiguration eng::configuration;
 
@@ -18,11 +20,6 @@ std::mutex eng::engineMtx;
 
 Scene* eng::_currentScene;
 
-
-void test(eng::input::MouseMoveEvent *e) {
-	std::printf("Mouse deltax: %f, deltay: %f.\n", e->deltaX, e->deltaY);
-}
-
 bool eng::init() {
 	if (!glfwInit()) {
 		std::fprintf(stderr, "Engine: Failed to initialize GLFW.\n");
@@ -37,19 +34,15 @@ void eng::create() {
 
 	ResourceManager::registerLoader<TextFileResource>(TextFileResource::load);
 	ResourceManager::registerLoader<Shader>(Shader::load);
+    ResourceManager::registerLoader<Texture>(Texture::load);
 }
 
 void eng::startLoop() {
-	//Initialize all game objects;
-	input::registerMouseMoveHandler(test);
-	
 	isRunning.store(true);
 
 	render_thread.start();
 	update_thread.start();
 	resource_thread.start();
-
-	//resource_manager::start();
 }
 
 void eng::joinAll() {
@@ -59,7 +52,6 @@ void eng::joinAll() {
 	resource_thread.join();
 
     std::cout << "Joined all threads.\n";
-    // resource_manager::join();
 }
 
 void eng::terminate() {
@@ -74,6 +66,11 @@ void eng::startLoopJoinAndTerminate(){
 
 void eng::setCurrentScene(Scene& scene) {
 	_currentScene = &scene;
-	//@Implement
+	// @Implement
+    // (Filippo 28/04/17 ) I forgot what i wanted to implement
+}
+
+void eng::setWindowConfiguration(const WindowConfiguration& windowConfiguration) {
+    configuration.windowConfiguration = windowConfiguration;
 }
 

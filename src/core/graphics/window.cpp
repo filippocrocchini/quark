@@ -81,7 +81,7 @@ void Window::create() {
 	if (config.fullscreen) {
 		int count;
 		GLFWmonitor** monitors = glfwGetMonitors(&count);
-		if (config.monitor < count) {
+		if (config.monitor < (unsigned)count) {
 			monitor = monitors[config.monitor];
 		}
 	}

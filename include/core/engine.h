@@ -30,6 +30,7 @@ namespace eng {
 	extern Scene* _currentScene;
 
 	extern void setCurrentScene(Scene&);
+    extern void setWindowConfiguration(const WindowConfiguration& windowConfiguration);
 
 	//Start all threads, create window etc..
 	extern bool init();

@@ -6,7 +6,8 @@ void Scene::addRootGameObject(GameObject& object) {
 }
 
 void Scene::removeRootGameObject(GameObject& object) {
-	//@Implement
+    abort();
+    //@Implement
 }
 
 void Scene::registerGameObject(GameObject* object) {
@@ -22,6 +23,7 @@ void Scene::registerGameObject(GameObject* object) {
 }
 
 void Scene::unregisterGameObject(GameObject& object) {
+    abort();
 	//@Implement
 }
 
@@ -38,5 +40,6 @@ void Scene::registerComponent(Component* comp) {
 }
 
 void Scene::unregisterComponent(Component& comp) {
+    abort();
 	//@Implement
 }

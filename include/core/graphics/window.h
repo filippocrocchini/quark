@@ -1,5 +1,5 @@
 #pragma once
-#include <GLFW/glfw3.h>
+#include <glfw/include/GLFW/glfw3.h>
 
 #include <iostream>
 #include <map>
@@ -77,7 +77,7 @@ public:
 
 	void create(); //creates window
 	void recreate(); // destroys the window and creates a new one
-	void destroy();//deletes this window (glfwDestroyWindow)
+	void destroy(); // deletes this window (glfwDestroyWindow)
 
 private:
 	static std::map<GLFWwindow*, Window*> handleToPtr;

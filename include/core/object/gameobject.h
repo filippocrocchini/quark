@@ -10,10 +10,10 @@ class Toggleable {
 protected:
 	bool enabled = true;
 public:
-	bool isEnabled();
-	void toggle();
-	void enable();
-	void disable();
+	virtual bool isEnabled();
+	virtual void toggle();
+	virtual void enable();
+	virtual void disable();
 	virtual ~Toggleable() {};
 };
 
@@ -54,15 +54,17 @@ public:
 	//If the parent is nullptr then this object is a root.
 	GameObject(GameObject* parent = nullptr);
 
-	void addChild(GameObject&);
-	void removeChild(GameObject&);
+    virtual ~GameObject() = default;
+
+	virtual void addChild(GameObject&);
+	virtual void removeChild(GameObject&);
 
 	//Component* getComponentByName(std::string);
 	
-	void addComponent(Component&);
+	virtual void addComponent(Component&);
 
-	void removeComponent(Component&);
+	virtual void removeComponent(Component&);
 
-	bool isEnabled();
+	virtual bool isEnabled();
 };
 
