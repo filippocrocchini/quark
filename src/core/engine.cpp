@@ -3,7 +3,7 @@
 #include "core/resources/textfile.h"
 #include "core/resources/shader.h"
 #include "core/resources/texture.h"
-#include "core/resources/mesh.h"
+#include "core/models/mesh.h"
 
 EngineConfiguration eng::configuration;
 
