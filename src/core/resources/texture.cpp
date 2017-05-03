@@ -11,6 +11,7 @@ bool Texture::bind(int texture_unit) {
 
     glActiveTexture(GL_TEXTURE0 + texture_unit);
     glBindTexture(GL_TEXTURE_2D, id);
+    return true;
 }
 
 void Texture::unbind() {

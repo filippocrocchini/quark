@@ -15,8 +15,31 @@ set(GLEW_INCLUDE_FOLDER "glew/include" CACHE PATH "Path to the folder containing
 set(GLFW_INCLUDE_FOLDER "glfw/include" CACHE PATH "Path to the folder containing GLFW headers.")
 set(GLM_INCLUDE_FOLDER "glm/include" CACHE PATH "Path to the folder containing GLM headers.")
 
-file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
-file(GLOB_RECURSE INCLUDE_FILES include/*.h)
+set(PROJECT_SOURCE_FOLDER ./src)
+set(PROJECT_INCLUDE_FOLDER ./include)
+
+file( GLOB SOURCE_FILES
+  ${PROJECT_SOURCE_FOLDER}/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/SOIL2/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/graphics/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/managers/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/models/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/object/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/resources/*.cpp
+  ${PROJECT_SOURCE_FOLDER}/core/threads/*.cpp
+)
+
+file( GLOB INCLUDE_FILES
+  ${PROJECT_INCLUDE_FOLDER}/core/*.h
+  ${PROJECT_INCLUDE_FOLDER}/SOIL2/*.h
+  ${PROJECT_INCLUDE_FOLDER}/core/graphics/*.h
+  ${PROJECT_INCLUDE_FOLDER}/core/managers/*.h
+  ${PROJECT_INCLUDE_FOLDER}/core/models/*.h
+  ${PROJECT_INCLUDE_FOLDER}/core/object/*.h
+  ${PROJECT_INCLUDE_FOLDER}/core/resources/*.h
+  ${PROJECT_INCLUDE_FOLDER}/core/threads/*.h
+)
 
 set(ASSIMP_DLL "libassimp" CACHE STRING "Assimp library name.")
 set(GLEW_DLL "libglew" CACHE STRING "Glew library name, usually libglew or glew32.")
