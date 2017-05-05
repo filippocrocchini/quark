@@ -6,6 +6,7 @@ set(QUARK_BUILD_SHARED_LIB OFF CACHE BOOL "Build shared library.")
 set(QUARK_USE_CUSTOM_LIBRARY_FOLDER OFF CACHE BOOL "Use custom folder for dependencies.")
 set(ASSIMP_STATIC OFF CACHE BOOL "Use static library version of assimp.")
 set(GLEW_STATIC OFF CACHE BOOL "Use static library version of glew.")
+set(GLFW_STATIC OFF CACHE BOOL "Use static library version of glfw.")
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
 

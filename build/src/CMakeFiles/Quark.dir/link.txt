@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11 -Wall   CMakeFiles/Quark.dir/main.cpp.o  -o Quark /usr/lib64/libGL.so /usr/lib64/libGLEW.so /usr/lib64/libglfw.so 

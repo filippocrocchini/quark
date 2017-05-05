@@ -1,6 +1,6 @@
 #include <iostream>
-#include <GLEW/glew.h>
-#include <GLFW3/glfw3.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 GLFWwindow* createWindow(){
     glfwWindowHint(GLFW_RESIZABLE, true);
@@ -25,7 +25,7 @@ int main(){
         return 1;
     }
 
-    createWindow();
+    GLFWwindow* window = createWindow();
 
     GLenum error = glewInit();
     if(error != GLEW_OK){
@@ -34,5 +34,11 @@ int main(){
     }
 
     std::cout << "GLEW version: " << glewGetString(GLEW_VERSION) << std::endl;
+    
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+        glfwSwapBuffers(window);   
+    }
+    
     return 0;
 }

@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/filippo/Documenti/GameEngine_c_version/src/main.cpp
+iostream
+-
+GL/glew.h
+-
+GLFW/glfw3.h
+-
+
