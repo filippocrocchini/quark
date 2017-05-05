@@ -1,0 +1,46 @@
+#
+# Find ASSIMP
+#
+# This module defines the following variables:
+# - ASSIMP_INCLUDE_DIRS
+# - ASSIMP_FOUND
+# - ASSIMP_HEADERS
+#
+# The following variables can be set as arguments for the module.
+# - ASSIMP_ROOT_DIR : Root library directory of ASSIMP
+#
+include(FindPackageHandleStandardArgs)
+
+set(ASSIMP_PATHS
+  ${ASSIMP_ROOT_DIR}
+  ${QUARK_DEPENDENCIES}
+)
+
+find_path(ASSIMP_INCLUDE_DIR assimp/scene.h PATH_SUFFIXES include PATHS ${ASSIMP_PATHS})
+
+if(WIN32)
+  set(CMAKE_FIND_LIBRARY_PREFIXES "")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ".dll")
+  if(ASSIMP_STATIC)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+  endif(ASSIMP_STATIC)
+else(WIN32)
+  set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
+  if(ASSIMP_STATIC)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+  endif(ASSIMP_STATIC)
+endif(WIN32)
+
+set(ASSIMP_LIBRARY ASSIMP_LIBRARY-NOTFOUND)
+find_library(ASSIMP_LIBRARY PATH_SUFFIXES lib lib64 NAMES assimp PATHS ${ASSIMP_PATHS})
+
+find_package_handle_standard_args(ASSIMP DEFAULT_MSG ASSIMP_INCLUDE_DIR ASSIMP_LIBRARY)
+
+if (ASSIMP_FOUND)
+	set(ASSIMP_INCLUDE_DIRS ${ASSIMP_INCLUDE_DIR})
+  set(ASSIMP_LIBRARIES ${ASSIMP_LIBRARY})
+  file(GLOB_RECURSE ASSIMP_HEADERS ${ASSIMP_INCLUDE_DIR}/*.hpp ${ASSIMP_INCLUDE_DIR}/*.h)
+endif()
+
+mark_as_advanced(ASSIMP_INCLUDE_DIR ASSIMP_LIBRARY ASSIMP_PATHS LIBRARY_NAME)

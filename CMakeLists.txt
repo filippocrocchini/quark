@@ -1,83 +1,25 @@
 cmake_minimum_required(VERSION 3.6)
+project(Quark)
 
-project(Engine)
+set(QUARK_RUN_TESTS OFF CACHE BOOL "Run tests for Quark library.")
+set(QUARK_BUILD_SHARED_LIB OFF CACHE BOOL "Build shared library.")
+set(QUARK_USE_CUSTOM_LIBRARY_FOLDER OFF CACHE BOOL "Use custom folder for dependencies.")
+set(ASSIMP_STATIC OFF CACHE BOOL "Use static library version of assimp.")
+set(GLEW_STATIC OFF CACHE BOOL "Use static library version of glew.")
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
 
-set(LIB_FOLDER "libs" CACHE PATH "Path to the folder containing lib files. The default is libs/.")
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-modules)
 
-set(ASSIMP_LIB_FOLDER "assimp/bin" CACHE PATH "Path to the folder containing ASSIMP dll files.")
-set(GLEW_LIB_FOLDER "glew/bin" CACHE PATH "Path to the folder containing GLEW dll files.")
-set(GLFW_LIB_FOLDER "glfw/bin" CACHE PATH "Path to the folder containing GLFW3 dll files.")
-
-set(ASSIMP_INCLUDE_FOLDER "assimp/include" CACHE PATH "Path to the folder containing ASSIMP headers.")
-set(GLEW_INCLUDE_FOLDER "glew/include" CACHE PATH "Path to the folder containing GLEW headers.")
-set(GLFW_INCLUDE_FOLDER "glfw/include" CACHE PATH "Path to the folder containing GLFW headers.")
-set(GLM_INCLUDE_FOLDER "glm/include" CACHE PATH "Path to the folder containing GLM headers.")
-
-set(PROJECT_SOURCE_FOLDER ./src)
-set(PROJECT_INCLUDE_FOLDER ./include)
-
-file( GLOB SOURCE_FILES
-  ${PROJECT_SOURCE_FOLDER}/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/SOIL2/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/graphics/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/managers/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/models/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/object/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/resources/*.cpp
-  ${PROJECT_SOURCE_FOLDER}/core/threads/*.cpp
-)
-
-file( GLOB INCLUDE_FILES
-  ${PROJECT_INCLUDE_FOLDER}/core/*.h
-  ${PROJECT_INCLUDE_FOLDER}/SOIL2/*.h
-  ${PROJECT_INCLUDE_FOLDER}/core/graphics/*.h
-  ${PROJECT_INCLUDE_FOLDER}/core/managers/*.h
-  ${PROJECT_INCLUDE_FOLDER}/core/models/*.h
-  ${PROJECT_INCLUDE_FOLDER}/core/object/*.h
-  ${PROJECT_INCLUDE_FOLDER}/core/resources/*.h
-  ${PROJECT_INCLUDE_FOLDER}/core/threads/*.h
-)
-
-set(ASSIMP_DLL "libassimp" CACHE STRING "Assimp library name.")
-set(GLEW_DLL "libglew" CACHE STRING "Glew library name, usually libglew or glew32.")
-set(GLFW_DLL "libglfw3" CACHE STRING "Glfw3 library name.")
-
-include_directories("include")
-include_directories("include/SOIL2")
-
-include_directories(${LIB_FOLDER}/${ASSIMP_INCLUDE_FOLDER})
-include_directories(${LIB_FOLDER}/${GLEW_INCLUDE_FOLDER})
-include_directories(${LIB_FOLDER}/${GLFW_INCLUDE_FOLDER})
-include_directories(${LIB_FOLDER}/${GLM_INCLUDE_FOLDER})
-
-link_directories(${LIB_FOLDER}/${ASSIMP_LIB_FOLDER})
-link_directories(${LIB_FOLDER}/${GLEW_LIB_FOLDER})
-link_directories(${LIB_FOLDER}/${GLFW_LIB_FOLDER})
-
-set(ASSIMP_DLL_FILE ${CMAKE_SOURCE_DIR}/${LIB_FOLDER}/${ASSIMP_LIB_FOLDER}/${ASSIMP_DLL}.dll)
-set(GLEW_DLL_FILE ${CMAKE_SOURCE_DIR}/${LIB_FOLDER}/${GLEW_LIB_FOLDER}/${GLEW_DLL}.dll)
-set(GLFW_DLL_FILE ${CMAKE_SOURCE_DIR}/${LIB_FOLDER}/${GLFW_LIB_FOLDER}/${GLFW_DLL}.dll)
-
-if(EXISTS ${ASSIMP_DLL_FILE})
-    configure_file(${ASSIMP_DLL_FILE} ${CMAKE_BINARY_DIR}/${ASSIMP_DLL}.dll COPYONLY)
-else()
-    message(${ASSIMP_DLL_FILE} " not found.")
+if(WIN32 OR USE_CUSTOM_LIBRARY_FOLDER)
+  set(QUARK_DEPENDENCIES ${CMAKE_SOURCE_DIR}/dependencies)
 endif()
 
-if(EXISTS ${GLEW_DLL_FILE})
-    configure_file(${GLEW_DLL_FILE} ${CMAKE_BINARY_DIR}/${GLEW_DLL}.dll COPYONLY)
-else()
-    message(${GLEW_DLL_FILE} " not found.")
-endif()
+file(GLOB QUARK_INCLUDE_FILES ./include/*.h)
+source_group(include ${QUARK_INCLUDE_FILES})
 
-if(EXISTS ${GLFW_DLL_FILE})
-    configure_file(${GLFW_DLL_FILE} ${CMAKE_BINARY_DIR}/${GLFW_DLL}.dll COPYONLY)
-else()
-    message(${GLFW_DLL_FILE} " not found.")
-endif()
+add_subdirectory(src)
 
-add_executable(Engine ${SOURCE_FILES} ${INCLUDE_FILES})
-target_link_libraries(Engine opengl32 ${ASSIMP_DLL} ${GLEW_DLL} ${GLFW_DLL})
+if(RUN_TESTS)
+  add_subdirectory(test)
+endif(RUN_TESTS)
