@@ -214,7 +214,7 @@ QUARK_BUILD_SHARED_LIB:BOOL=OFF
 QUARK_RUN_TESTS:BOOL=OFF
 
 //Use custom folder for dependencies.
-QUARK_USE_CUSTOM_LIBRARY_FOLDER:BOOL=ON
+QUARK_USE_CUSTOM_LIBRARY_FOLDER:BOOL=OFF
 
 //Value Computed by CMake
 Quark_BINARY_DIR:STATIC=/home/filippo/Documenti/GameEngine_c_version/build
