@@ -1,6 +1,15 @@
 #include <iostream>
+
+#include "main.h"
+
+int getNum(int n) {
+    return n > 5 ? 2 * n : n;
+}
+
+/*
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 
 GLFWwindow* createWindow(){
     glfwWindowHint(GLFW_RESIZABLE, true);
@@ -18,7 +27,7 @@ GLFWwindow* createWindow(){
 
     return windowHandle;
 }
-
+/*
 int main(){
     if(!glfwInit()){
         std::cout << "GLFW failed initialization.  " << std::endl;
@@ -41,4 +50,4 @@ int main(){
     }
     
     return 0;
-}
+}*/
