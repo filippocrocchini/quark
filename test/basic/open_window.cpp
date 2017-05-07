@@ -4,6 +4,8 @@
 
 
 GLFWwindow* createWindow(){
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_RESIZABLE, true);
     glfwWindowHint(GLFW_SAMPLES, 16);
 
