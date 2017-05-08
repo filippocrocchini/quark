@@ -4,6 +4,7 @@ bin/
 builds/
 build/
 cmake-build/
+mingw-make/
 .idea/
 .vs/
 .directory/

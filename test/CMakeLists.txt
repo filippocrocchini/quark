@@ -1,4 +1,4 @@
-get_property(QUARK_INCLUDE_FILES DIRECTORY ${CMAKE_SOURCE_DIR}/include PROPERTY QUARK_INCLUDE_FILES) 
+get_property(QUARK_INCLUDE_FILES DIRECTORY ${CMAKE_SOURCE_DIR}/include PROPERTY QUARK_INCLUDE_FILES)
 
 function(createTest NAME)
 	if(QUARK_BUILD_TESTS)
@@ -11,3 +11,4 @@ function(createTest NAME)
 endfunction()
 
 add_subdirectory(basic)
+add_subdirectory(looping_thread)
