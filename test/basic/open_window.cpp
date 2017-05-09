@@ -29,6 +29,9 @@ int main(){
     GLenum error = glewInit();
     if(error != GLEW_OK)
         return 1;    
-
+    
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    
     return 0;
 }

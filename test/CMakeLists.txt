@@ -12,3 +12,4 @@ endfunction()
 
 add_subdirectory(basic)
 add_subdirectory(looping_thread)
+add_subdirectory(resource_loader)

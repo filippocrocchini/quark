@@ -27,3 +27,8 @@ if(GLFW3_FOUND)
   target_include_directories(quark PUBLIC ${GLFW3_INCLUDE_DIR})
   target_sources(quark PUBLIC ${GLFW3_HEADERS})
 endif()
+
+if(NOT WIN32)
+    find_library(PTHREAD PATH_SUFFIXES lib lib64 NAMES pthread) 
+    target_link_libraries(quark ${PTHREAD})
+endif()
