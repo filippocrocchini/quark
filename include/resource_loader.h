@@ -29,7 +29,7 @@ public:
            cache.insert(std::make_pair(name, std::make_shared<T>(args2...)));
         }, args...);
 
-       //NOTE: I had to do this ugly thing because the compile does't compile this:
+       //NOTE: I had to do this ugly thing because the compiler doesn't compile this:
        /*
        std::function<void(void)> func = [&](){
           cache.insert(std::make_pair(name, std::make_shared<T>(args...)));
