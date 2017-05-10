@@ -7,13 +7,9 @@
 
 #include "looping_thread.h"
 
-#include <memory>
 #include <string>
-#include <unordered_map>
 #include <queue>
 #include <functional>
-
-#include <iostream>
 
 class Resource {
 public:
@@ -23,12 +19,14 @@ public:
     virtual ~Resource() = default;
 };
 
-class ResourceLoader : public LoopingThread {
+#include "registry.h"
+
+class ResourceLoader : public LoopingThread, private Registry<std::string, Resource>{
 public:
     ResourceLoader(LoopController* controller) : LoopingThread(controller) {}
 
     template<typename T, typename... Args>
-    void Load(std::string name, Args&&... args){
+    void LoadResource(std::string name, Args&&... args){
         finished_loading = false;
 
        //NOTE: I had to do this ugly thing because the compiler doesn't compile this:
@@ -39,32 +37,27 @@ public:
        */
 
         load_functions_queue.push(std::bind([=](Args... args2){
-            auto res = std::make_shared<T>(std::forward<Args>(args2)...);
-            if(res->Load())
-                res->onLoad();
-            else
-                res->onFail();
-            cache.emplace(name, res);
+            T* res = new T{std::forward<Args>(args2)...};
+            Register(name, static_cast<Resource*>(res));
        }, args...));
     }
 
     template<typename T>
-    std::shared_ptr<T> Get(std::string name){
-        auto res = cache.find(name);
-        if(res == cache.end()) return nullptr;
-        return std::dynamic_pointer_cast<T>(res->second);
+    T* GetResource(std::string name){
+        return static_cast<T*>(Get(name));
     }
 
-    void Release(std::string name);
-    void Clear();
+    template<typename T>
+    std::unique_ptr<T> ReleaseResource(std::string name){
+        return std::move(std::unique_ptr<T>( static_cast<T*>(Detach(name).release()) ));
+    }
 
     bool Done(){
         return load_functions_queue.empty() && finished_loading;
     }
 
-    int cacheSize(){
-        return cache.size();
-    }
+    using Registry<std::string, Resource>::size;
+    using Registry<std::string, Resource>::Clear;
 
     void WaitUntilDone();
     void WaitUntilDone(const int timeout);
@@ -72,7 +65,6 @@ protected:
     virtual void Loop() override;
 private:
     bool finished_loading = true;
-    std::unordered_map<std::string, std::shared_ptr<Resource>> cache;
     std::queue<std::function<void(void)>> load_functions_queue;
 };
 

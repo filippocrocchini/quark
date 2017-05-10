@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 void ResourceLoader::Loop(){
     std::cout << "Cycle\n";
@@ -15,14 +16,6 @@ void ResourceLoader::Loop(){
         finished_loading = true;
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-}
-
-void ResourceLoader::Release(std::string name){
-    cache.erase(name);
-}
-
-void ResourceLoader::Clear(){
-    cache.clear();
 }
 
 void ResourceLoader::WaitUntilDone(){
