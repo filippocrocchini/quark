@@ -24,7 +24,10 @@ int main(){
     l.Start();
 
     now = std::chrono::steady_clock::now().time_since_epoch();
-    if(std::chrono::duration_cast<std::chrono::microseconds>(now-t).count() >= 1000000) return 1;
+    if(std::chrono::duration_cast<std::chrono::microseconds>(now-t).count() >= 1000000){
+        l.Join();
+        return 1;
+    }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
@@ -38,11 +41,15 @@ int main(){
     long delta = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()-now).count();
 
     //The time passed between Stop and Join must be less than or equal to the time a Loop takes (Fixed at 1 second).
-    if(delta >= 1000000) return 1;
+    if(delta >= 1000000){
+        return 1;
+    }
 
 
     now = std::chrono::steady_clock::now().time_since_epoch();
 
-    if(std::chrono::duration_cast<std::chrono::microseconds>(now-t).count() < 1000000) return 1;
+    if(std::chrono::duration_cast<std::chrono::microseconds>(now-t).count() < 1000000){
+        return 1;
+    }
     return 0;
 }

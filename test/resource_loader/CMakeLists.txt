@@ -1,1 +1,1 @@
-createTest(load_dummy)
+createTest(load_dummies)
