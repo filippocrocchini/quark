@@ -24,9 +24,19 @@ public:
 
     template<typename T, typename... Args>
     void Load(std::string name, Args... args){
-        load_functions_queue.push([&name, &args..., this](){
-           this->cache.insert(std::make_pair(name, std::make_shared<T>(args...))); 
-        });
+
+        std::function<void(void)> func = std::bind([&](Args... args2){
+           cache.insert(std::make_pair(name, std::make_shared<T>(args2...)));
+        }, args...);
+
+       //NOTE: I had to do this ugly thing because the compile does't compile this:
+       /*
+       std::function<void(void)> func = [&](){
+          cache.insert(std::make_pair(name, std::make_shared<T>(args...)));
+       }
+       */
+
+        load_functions_queue.push(func);
     }
 
     template<typename T>
