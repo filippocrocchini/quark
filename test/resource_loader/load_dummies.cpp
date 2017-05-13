@@ -9,22 +9,23 @@ public:
     Dummy(int value):value(value){
     }
 
-    virtual bool Load(){
+    virtual bool Load() override {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         return true;
     }
 
-    virtual void onLoad(){}
+    virtual void onLoad() override {}
 
-    virtual void onFail(){}
+    virtual void onFail() override {}
 };
 
 int main(){
     LoopController c;
-    ResourceLoader loader(&c);
+    Registry<std::string, Resource> reg;
+    ResourceLoader loader{&c};
 
     for(int i = 0; i< 10; ++i)
-        loader.LoadResource<Dummy>(std::string("Dummy") + std::to_string(i), i);
+        loader.Load<Dummy>(&reg, std::string("Dummy") + std::to_string(i), i);
 
     loader.Start();
 
@@ -36,24 +37,24 @@ int main(){
     loader.Join();
 
     for(int i = 0; i< 10; ++i){
-        auto dummy = loader.GetResource<Dummy>(std::string("Dummy") + std::to_string(i));
+        auto dummy = reg.Get<Dummy>(std::string("Dummy") + std::to_string(i));
         if(dummy == nullptr){
             return 1;
         }
         if(dummy->value != i) return 1;
     }
 
-    auto rem = loader.ReleaseResource<Dummy>("Dummy0");
+    std::unique_ptr<Dummy> rem = reg.Release<Dummy>("Dummy0");
 
     if(rem.get() == nullptr)
         return 1;
     if(rem->value != 0)
         return 1;
-    if(loader.size() != 9)
+    if(reg.size() != 9)
         return 1;
 
-    loader.Clear();
-    if(loader.size() != 0) return 1;
+    reg.Clear();
+    if(reg.size() != 0) return 1;
 
     return 0;
 }

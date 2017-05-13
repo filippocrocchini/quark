@@ -11,13 +11,19 @@
 template <typename Key, typename Value>
 class Registry {
 public:
-    void Register(const Key& key, Value* value_pointer){
-        cache.emplace(key, std::unique_ptr<Resource>{value_pointer});
+
+    bool Register(const Key& key, std::unique_ptr<Value> value_pointer){
+        return cache.emplace(key, std::move(value_pointer)).second;
     }
 
-    template<typename... Args>
-    void Emplace(const Key& key, Args&&... args){
-        Register(key, new Value{std::forward<Args>(args)...});
+    template<typename T>
+    bool Register(const Key& key, std::unique_ptr<T> value_pointer){
+        return cache.emplace(key, std::move(std::unique_ptr<Value>(static_cast<Value*>(value_pointer.release())))).second;
+    }
+
+    template<typename T, typename... Args>
+    bool Emplace(const Key& key, Args&&... args){
+        return Register(key, new Value{std::forward<Args>(args)...});
     }
 
     Value* Get(const Key& key){
@@ -26,7 +32,12 @@ public:
         return (res->second).get();
     }
 
-    std::unique_ptr<Value> Detach(Key key){
+    template<typename T>
+    T* Get(const Key& key){
+        return static_cast<T*>(Get(key));
+    }
+
+    std::unique_ptr<Value> Release(const Key& key){
         auto removed_itr = cache.find(key);
         if(removed_itr == cache.end()) return nullptr;
         Value* removed = removed_itr->second.release();
@@ -34,7 +45,13 @@ public:
         return std::move(std::unique_ptr<Value>{removed});
     }
 
-    void Remove(Key key){
+    template<typename T>
+    std::unique_ptr<T> Release(const Key& key){
+        Value* ptr = Release(key).release();
+        return std::move(std::unique_ptr<T>(static_cast<T*>(ptr)));
+    }
+
+    void Remove(Key& key){
         cache.erase(key);
     }
 
