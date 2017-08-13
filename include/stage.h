@@ -11,11 +11,12 @@
 #include "window.h"
 #include "looping_thread.h"
 #include "scene.h"
+#include "renderer.h"
 
 class Stage {
 public:
     Stage(LoopController* controller);
-    Stage() = delete;
+    Stage() = default;
 
     void Start();
     void Join();
@@ -33,6 +34,7 @@ private:
     LoopingThread update_thread;
 
     std::map<std::string, std::unique_ptr<Scene>> scenes;
+    Renderer renderer;
     Scene* current_scene;
 };
 

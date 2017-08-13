@@ -15,18 +15,19 @@ void Component::SetParent(GameObject* parent){
 }
 
 GameObject* GameObject::AddComponent(std::unique_ptr<Component> component){
-  component->SetParent(this);
+    component->SetParent(this);
 
-  Behaviour* b = static_cast<Behaviour*>(component.get());
-  if(b) behaviours.insert(b);
+    Behaviour* b = dynamic_cast<Behaviour*>(component.get());
+    if(b)
+        behaviours.insert(b);
 
-  components.insert(std::make_pair(component->GetName(), std::move(component)));
-  return this;
+    components.insert(std::make_pair(component->GetName(), std::move(component)));
+    return this;
 }
 
 GameObject* GameObject::RemoveComponent(const std::string& name){
   auto com_itr = components.find(name);
-  behaviours.erase(static_cast<Behaviour*>(com_itr->second.get()));
+  behaviours.erase(dynamic_cast<Behaviour*>(com_itr->second.get()));
   components.erase(com_itr);
   return this;
 }

@@ -1,23 +1,46 @@
 /*
 * Copyright (C) 2017 Filippo Crocchini.
 */
+
+#include <GL/glew.h>
 #include "stage.h"
 
 #include <memory>
 
 Stage::Stage(LoopController* controller) : controller(controller), render_thread(controller), update_thread(controller) {
     Stage* stage = this;
+
     render_thread.SetOnInitialization([stage](){
         if (!glfwInit()) {
-    		std::fprintf(stderr, "[RenderThread] Failed to initialize GLFW.\n");
+    		std::cerr << "[RenderThread] Failed to initialize GLFW.\n";
     		return 1;
         }
+
         stage->window.Create();
+        stage->window.BindContext();
+
+        if (glewInit() != GLEW_OK) {
+		    std::cerr << "[RenderThread] Failed to initialize GLEW.\n";
+            return 1;
+        }
+
+        glMatrixMode(GL_MODELVIEW);
+        glColor3f(1,1,1);
+
         return 0;
     });
     render_thread.SetOnLoop([stage](){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();//load identity matrix
+
         if(stage->current_scene)
-            stage->current_scene->Render();
+            stage->current_scene->Render(&(stage->renderer));
+        stage->window.SwapBuffers();
+    });
+    render_thread.SetOnStop([stage]() {
+        //NOTE: Case 1: The controller stopped this thread
+        //NOTE: Case 2: The Thread wasn't able to initialize either GLEW or GLFW or both, so the engine must shut down.
+        stage->controller->Stop(); //FIXME: Should the engine stop here?
     });
 
     update_thread.SetOnLoop([stage](){
@@ -28,7 +51,7 @@ Stage::Stage(LoopController* controller) : controller(controller), render_thread
         }
 
         if(stage->current_scene)
-            stage->current_scene->Update(0); //FIXME: Maybe create: double LoopingThread::GetDelta()
+            stage->current_scene->Update(stage->update_thread.GetDelta());
     });
 }
 

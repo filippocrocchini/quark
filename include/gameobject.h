@@ -9,9 +9,10 @@
 #include <unordered_set>
 #include <memory>
 #include <string>
+#include <cxxabi.h>
 
 #include "toggleable.h"
-#include "component.h"
+#include "graphic_components.h"
 
 class Scene;
 
@@ -31,7 +32,7 @@ public:
 
     template <typename T>
     T* GetComponent(){
-      auto cmp_itr = components.find(typeid(T).name());
+      auto cmp_itr = components.find(abi::__cxa_demangle(typeid(T).name(),0,0,0));
       if(cmp_itr == components.end()) return nullptr;
       return static_cast<T*>(cmp_itr->second.get());
     }

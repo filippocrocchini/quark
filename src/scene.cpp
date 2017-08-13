@@ -27,16 +27,19 @@ GameObject* Scene::GetGameObject(const std::string& name){
 //NOTE: This thread should be running updates
 void Scene::Update(double delta){
   for(auto go_itr = gameobjects.begin(); go_itr != gameobjects.end(); go_itr++){
-
     auto behaviours = go_itr->second->GetBehaviours();
     for(auto b_itr = behaviours.begin(); b_itr != behaviours.end(); b_itr++)
-      (*b_itr)->Update(delta);
+        (*b_itr)->Update(delta);
     for(auto b_itr = behaviours.begin(); b_itr != behaviours.end(); b_itr++)
       (*b_itr)->LateUpdate(delta);
   }
 }
 
 //NOTE: This thread should be running graphics
-void Scene::Render(){
-  //TODO: Make something basic
+void Scene::Render(Renderer* renderer){
+    for(auto go_itr = gameobjects.begin(); go_itr != gameobjects.end(); go_itr++){
+      auto rectangle_mesh = go_itr->second->GetComponent<RectangleMesh>();
+      if(rectangle_mesh)
+        renderer->drawRectangleMesh(rectangle_mesh);
+    }
 }

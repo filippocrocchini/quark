@@ -42,6 +42,7 @@ public:
     void SetOnLoop(std::function<void(void)> on_loop){this->on_loop = on_loop;}
     void SetOnStop(std::function<void(void)> on_stop){this->on_stop = on_stop;}
 
+    double GetDelta() { return delta_time; }
 protected:
     virtual int OnInitialize();
     virtual void Loop();
@@ -50,6 +51,8 @@ private:
     LoopController* controller;
     std::function<int(void)> on_initialize;
     std::function<void(void)> on_loop, on_stop;
+
+    double delta_time;
 
     std::thread worker;
 };

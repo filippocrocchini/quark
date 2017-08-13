@@ -6,6 +6,7 @@
 #define SCENE_H
 
 #include "gameobject.h"
+#include "renderer.h"
 
 class Stage;
 
@@ -16,7 +17,7 @@ public:
     GameObject* GetGameObject(const std::string& name);
 
     void Update(double delta);
-    void Render();
+    void Render(Renderer* renderer);
 
     const std::string& GetName() { return name; }
 private:

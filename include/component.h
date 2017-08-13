@@ -5,9 +5,9 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <cxxabi.h>
 
 #include "toggleable.h"
-#include "gameobject.h"
 
 class GameObject;
 
@@ -22,7 +22,7 @@ public:
     static T* Create(Args&&... args) {
       static_assert(std::is_base_of<Component, T>::value);
       T* comp = new T{std::forward<Args>(args)...};
-      comp->name = typeid(T).name();
+      comp->name = abi::__cxa_demangle(typeid(T).name(), 0,0,0);
       return comp;
     }
 
@@ -47,4 +47,3 @@ public:
 };
 
 #endif  // COMPONENT_H
-

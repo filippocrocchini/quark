@@ -10,6 +10,7 @@
 #include <map>
 
 enum WindowStatus {
+    WINDOW_NULL,
     WINDOW_OK,
 	WINDOW_CREATION_FAILED,
 	WINDOW_DESTROYED

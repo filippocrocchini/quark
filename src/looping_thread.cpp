@@ -4,6 +4,8 @@
 
 #include "looping_thread.h"
 
+#include <chrono>
+
 LoopingThread::LoopingThread(LoopController* controller, std::function<void(void)> on_loop) : controller(controller), on_loop(on_loop) {}
 LoopingThread::LoopingThread(LoopController* controller) : LoopingThread(controller, nullptr){}
 LoopingThread::LoopingThread() : LoopingThread(nullptr, nullptr) {}
@@ -12,8 +14,15 @@ void LoopingThread::Start(){
     worker = std::thread{
     	[this]() {
             if(OnInitialize() == 0){
-                while(this->controller->isRunning())
+                auto last = std::chrono::high_resolution_clock::now();
+                auto now = std::chrono::high_resolution_clock::now();
+
+                while(this->controller->isRunning()){
+                    now = std::chrono::high_resolution_clock::now();
+                    this->delta_time = std::chrono::duration<double>(now - last).count();
+                    last = now;
                     this->Loop();
+                }
             }
             OnStop();
         }

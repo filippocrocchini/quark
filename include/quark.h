@@ -8,13 +8,13 @@
 #include <string>
 
 #include "looping_thread.h"
-
 #include "resource_loader.h"
 #include "registry.h"
+#include "stage.h"
 
 class Quark{
 public:
-    Quark() : resource_loader(&thread_controller) {}
+    Quark() : stage(&thread_controller), resource_loader(&thread_controller) {}
 
     virtual ~Quark(){
         if(thread_controller.isRunning()){
@@ -50,6 +50,8 @@ private:
     Registry<std::string, Resource> resource_reg;
     LoopController thread_controller;
     ResourceLoader resource_loader;
+    Stage stage;
+
     bool threads_started = false;
 };
 
