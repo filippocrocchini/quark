@@ -1,16 +1,19 @@
+/*
+* Copyright (C) 2017 Filippo Crocchini.
+*/
+
 #include "resource_loader.h"
 
 #include <thread>
 #include <chrono>
 #include <iostream>
 
+ResourceLoader::ResourceLoader(LoopController* controller) : LoopingThread(controller) {}
+
 void ResourceLoader::Loop(){
-    std::cout << "Cycle\n";
     if(!load_functions_queue.empty()){
-        std::cout << "Found resources to load.\n";
         auto func = load_functions_queue.front();
         load_functions_queue.pop();
-        std::cout << "Popped load function.\n";
         func();
     } else {
         finished_loading = true;

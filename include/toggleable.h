@@ -7,8 +7,8 @@
 
 class Toggleable {
 public:
-    Toggleable() : enabled(true) {}
     Toggleable(bool enabled) : enabled(enabled){}
+    Toggleable() : enabled(true) {}
 
     virtual bool isEnabled(){
         return enabled;

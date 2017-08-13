@@ -51,7 +51,7 @@ public:
         return std::move(std::unique_ptr<T>(static_cast<T*>(ptr)));
     }
 
-    void Remove(Key& key){
+    void Remove(const Key& key){
         cache.erase(key);
     }
 

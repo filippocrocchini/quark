@@ -15,7 +15,7 @@
 
 class ResourceLoader : public LoopingThread{
 public:
-    ResourceLoader(LoopController* controller) : LoopingThread(controller) {}
+    ResourceLoader(LoopController* controller);
 
     template<typename T, typename... Args>
     void Load(Registry<std::string, Resource>* resource_reg, const std::string& name, Args&&... args){

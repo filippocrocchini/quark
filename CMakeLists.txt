@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(Quark)
 
+
 set(QUARK_BUILD_TESTS ON CACHE BOOL "Build tests for Quark library.")
 set(QUARK_BUILD_SHARED_LIB OFF CACHE BOOL "Build shared library.")
 set(QUARK_USE_CUSTOM_LIBRARY_FOLDER OFF CACHE BOOL "Use custom folder for dependencies.")
@@ -20,6 +21,8 @@ add_subdirectory(include)
 include_directories(include)
 
 add_subdirectory(src)
+
+add_subdirectory(app)
 
 if(QUARK_BUILD_TESTS)
 	enable_testing()

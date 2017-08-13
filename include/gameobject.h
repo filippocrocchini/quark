@@ -5,33 +5,48 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include <map>
 #include <unordered_set>
 #include <memory>
+#include <string>
 
-class GameObject;
+#include "toggleable.h"
+#include "component.h"
 
-class Component : public Toggleable {
-protected:
-    Component(const GameObject& parent) : parent(&parent) {}
-    virtual bool isEnabled() override;
-private:
-    GameObject* parent;
-};
+class Scene;
 
 class GameObject : public Toggleable {
 public:
-    void AddChild();
-    void RemoveChild();
-    void AddComponent();
-    void RemoveComponent();
+    GameObject* RemoveComponent(const std::string& name);
 
-    //GameObj
+    template <typename T, typename... Args>
+    GameObject* AddComponent(Args&&... args){
+      return AddComponent(Component::CreateUnique<T>(std::forward<Args>(args)...));
+    }
 
-    virtual bool isEnabled() override;
+    template <typename T>
+    T* GetComponent(const std::string& name){
+      return static_cast<T*>(components.at(name).get());
+    }
+
+    template <typename T>
+    T* GetComponent(){
+      auto cmp_itr = components.find(typeid(T).name());
+      if(cmp_itr == components.end()) return nullptr;
+      return static_cast<T*>(cmp_itr->second.get());
+    }
+
+    const std::string& GetName() const { return name; }
+    const std::unordered_set<Behaviour*>& GetBehaviours() const { return behaviours; }
+
 private:
-    GameObject* parent;
-    std::unordered_set<GameObject*> children;
-    std::unordered_set<Component*> components;
+    friend class Scene;
+    std::map<std::string, std::unique_ptr<Component>> components;
+    std::unordered_set<Behaviour*> behaviours;
+    std::string name;
+
+    GameObject() = default;
+    GameObject* AddComponent(std::unique_ptr<Component> component);
 };
 
 #endif  // GAMEOBJECT_H

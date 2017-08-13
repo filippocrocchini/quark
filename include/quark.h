@@ -14,7 +14,8 @@
 
 class Quark{
 public:
-    Quark(){};
+    Quark() : resource_loader(&thread_controller) {}
+
     virtual ~Quark(){
         if(thread_controller.isRunning()){
             Stop();
@@ -48,7 +49,7 @@ public:
 private:
     Registry<std::string, Resource> resource_reg;
     LoopController thread_controller;
-    ResourceLoader resource_loader{&thread_controller};
+    ResourceLoader resource_loader;
     bool threads_started = false;
 };
 

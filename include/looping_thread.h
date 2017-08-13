@@ -6,6 +6,7 @@
 #define LOOPING_THREAD_H
 
 #include <thread>
+#include <functional>
 #include <mutex>
 #include <atomic>
 
@@ -14,6 +15,8 @@ public:
     LoopController(){
         running.store(true);
     }
+    virtual ~LoopController() = default;
+
     bool isRunning(){
         return running.load();
     }
@@ -26,13 +29,28 @@ private:
 
 class LoopingThread {
 public:
-    LoopingThread(LoopController* controller) : controller(controller) {}
+    LoopingThread(LoopController* controller, std::function<void(void)> loop);
+    LoopingThread(LoopController* controller);
+    LoopingThread();
+
+    virtual ~LoopingThread() = default;
+
     void Start();
     void Join();
+
+    void SetOnInitialization(std::function<int(void)> on_initialize){this->on_initialize = on_initialize;}
+    void SetOnLoop(std::function<void(void)> on_loop){this->on_loop = on_loop;}
+    void SetOnStop(std::function<void(void)> on_stop){this->on_stop = on_stop;}
+
 protected:
-    virtual void Loop() = 0;
+    virtual int OnInitialize();
+    virtual void Loop();
+    virtual void OnStop();
 private:
     LoopController* controller;
+    std::function<int(void)> on_initialize;
+    std::function<void(void)> on_loop, on_stop;
+
     std::thread worker;
 };
 
