@@ -13,11 +13,11 @@
 #include "scene.h"
 #include "renderer.h"
 
-class Stage {
-public:
-    Stage(LoopController* controller);
-    Stage() = default;
+class Quark;
 
+class Stage {
+    friend class Quark;
+public:
     void Start();
     void Join();
 
@@ -26,6 +26,13 @@ public:
     Scene* GetScene(const std::string& name);
 
     void SetCurrentScene(const std::string& name);
+
+    const std::string& GetName() const { return name; }
+    unsigned GetWidth() { return width; }
+    unsigned GetHeight() { return height; }
+protected:
+    Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height);
+    Stage() = default;
 private:
     Window window;
 
@@ -36,6 +43,9 @@ private:
     std::map<std::string, std::unique_ptr<Scene>> scenes;
     Renderer renderer;
     Scene* current_scene;
+
+    std::string name;
+    unsigned width, height;
 };
 
 #endif //  STAGE_H

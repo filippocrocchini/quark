@@ -3,7 +3,7 @@
 */
 
 #include "gameobject.h"
-#include "component.h"
+#include "components.h"
 
 bool Component::isEnabled(){
   if(!parent) return this->enabled;

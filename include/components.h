@@ -1,5 +1,5 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef COMPONENTS_H
+#define COMPONENTS_H
 
 #include <map>
 #include <memory>
@@ -13,9 +13,6 @@ class GameObject;
 
 class Component : public Toggleable {
 public:
-    void SetParent(GameObject* parent);
-    const std::string& GetName() const { return name; }
-    virtual bool isEnabled() override;
     virtual ~Component() = default;
 
     template<typename T, typename... Args>
@@ -30,6 +27,10 @@ public:
     static std::unique_ptr<T> CreateUnique(Args&&... args) {
       return std::move(std::unique_ptr<T>(Create<T>(std::forward<Args>(args)...)));
     }
+
+    void SetParent(GameObject* parent);
+    const std::string& GetName() const { return name; }
+    virtual bool isEnabled() override;
 
 protected:
     GameObject* parent;
@@ -46,4 +47,14 @@ public:
   virtual void LateUpdate(double delta) = 0;
 };
 
-#endif  // COMPONENT_H
+class RectangleMesh : public Component {
+public:
+    float x, y, width, height;
+    float r, g, b;
+
+    RectangleMesh(float x, float y, float width, float height, float r, float g, float b) :
+         x(x), y(y), width(width), height(height), r(r), g(g), b(b){}
+    virtual ~RectangleMesh() = default;
+};
+
+#endif  // COMPONENTS_H

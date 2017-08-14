@@ -22,7 +22,7 @@ int main(){
     eng.Start();
 
     eng.LoadResource<Dummy>("One", 1);
-    eng.resourceLoader()->WaitUntilDone();
+    eng.WaitForResources;
 
     Dummy* one = eng.GetResource<Dummy>("One");
     if(one == nullptr || one->value != 1) return 1;

@@ -5,7 +5,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "graphic_components.h"
+#include "components.h"
 
 class Renderer {
 public:

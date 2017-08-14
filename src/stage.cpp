@@ -7,7 +7,11 @@
 
 #include <memory>
 
-Stage::Stage(LoopController* controller) : controller(controller), render_thread(controller), update_thread(controller) {
+Stage::Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height) : controller(controller), render_thread(controller), update_thread(controller){
+    this->name = name;
+    this->width = width;
+    this->height = height;
+
     Stage* stage = this;
 
     render_thread.SetOnInitialization([stage](){
@@ -15,6 +19,17 @@ Stage::Stage(LoopController* controller) : controller(controller), render_thread
     		std::cerr << "[RenderThread] Failed to initialize GLFW.\n";
     		return 1;
         }
+
+        WindowConfiguration config;
+
+        config.title = stage->GetName();
+        config.width = stage->GetWidth();
+        config.height = stage->GetHeight();
+        config.opengl_profile = GLFW_OPENGL_ANY_PROFILE;
+        config.opengl_major = 1;
+        config.opengl_minor = 1;
+
+        stage->window.SetConfiguration(config);
 
         stage->window.Create();
         stage->window.BindContext();
@@ -31,8 +46,6 @@ Stage::Stage(LoopController* controller) : controller(controller), render_thread
     });
     render_thread.SetOnLoop([stage](){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glLoadIdentity();//load identity matrix
-
         if(stage->current_scene)
             stage->current_scene->Render(&(stage->renderer));
         stage->window.SwapBuffers();
@@ -83,4 +96,6 @@ Scene* Stage::GetScene(const std::string& name){
 
 void Stage::SetCurrentScene(const std::string& name){
     current_scene = GetScene(name);
+    if(current_scene == nullptr)
+        std::cout << "[Stage][Warning] The current scene has been set to nullptr, ignore if this behaviour is expected.\n";
 }

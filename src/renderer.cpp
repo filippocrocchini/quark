@@ -7,14 +7,13 @@
 #include <GL/glew.h>
 
 void Renderer::drawRectangleMesh(RectangleMesh* mesh){
-    glColor3f(mesh->r, mesh->g, mesh->b);
+    glLoadIdentity();
 
+    glColor3f(mesh->r, mesh->g, mesh->b);
     glBegin(GL_QUADS);
     glVertex2d(mesh->x, mesh->y);
     glVertex2d(mesh->x+mesh->width, mesh->y);
     glVertex2d(mesh->x+mesh->width, mesh->y+mesh->height);
     glVertex2d(mesh->x, mesh->y+mesh->height);
     glEnd();
-
-    //std::cout<<"balbal" << std::endl;
 }

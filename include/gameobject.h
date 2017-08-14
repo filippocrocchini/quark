@@ -12,7 +12,7 @@
 #include <cxxabi.h>
 
 #include "toggleable.h"
-#include "graphic_components.h"
+#include "components.h"
 
 class Scene;
 

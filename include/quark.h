@@ -14,7 +14,7 @@
 
 class Quark{
 public:
-    Quark() : stage(&thread_controller), resource_loader(&thread_controller) {}
+    Quark(const std::string& name, unsigned width, unsigned height) : resource_loader(&thread_controller), stage(&thread_controller, name, width, height) {}
 
     virtual ~Quark(){
         if(thread_controller.isRunning()){
@@ -26,12 +26,22 @@ public:
         if(!threads_started){
             threads_started = true;
             resource_loader.Start();
+            stage.Start();
         }
     }
 
     void Stop(){
         thread_controller.Stop();
+        Join();
+    }
+
+    void Join(){
         resource_loader.Join();
+        stage.Join();
+    }
+
+    void WaitForResources(){
+        resource_loader.WaitUntilDone();
     }
 
     template<typename T, typename... Args>
@@ -44,8 +54,9 @@ public:
         return resource_reg.Get<T>(name);
     }
 
-    Registry<std::string, Resource>* resourceRegistry(){ return &resource_reg;}
-    ResourceLoader* resourceLoader(){ return &resource_loader;}
+    Registry<std::string, Resource>* GetResourceRegistry(){ return &resource_reg;}
+    ResourceLoader* GetResourceLoader(){ return &resource_loader;}
+    Stage* GetStage() { return &stage; }
 private:
     Registry<std::string, Resource> resource_reg;
     LoopController thread_controller;
