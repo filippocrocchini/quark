@@ -17,14 +17,20 @@ public:
 };
 
 
+Quark eng{"Hello", 1080, 720};
+
 int main(){
-    Quark eng;
     eng.Start();
 
     eng.LoadResource<Dummy>("One", 1);
-    eng.WaitForResources;
+    eng.WaitForResources();
 
     Dummy* one = eng.GetResource<Dummy>("One");
-    if(one == nullptr || one->value != 1) return 1;
+
+    if(one == nullptr || one->value != 1){
+        eng.Stop();
+        return 1;
+    }
+    eng.Stop();
     return 0;
 }

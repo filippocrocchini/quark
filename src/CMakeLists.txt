@@ -8,6 +8,11 @@ source_group(src FILES ${QUARK_SOURCE_FILES})
 
 add_library(quark STATIC ${QUARK_SOURCE_FILES} ${INCLUDE_FILES})
 
+find_package(GLM REQUIRED)
+if(GLM_FOUND)
+  target_include_directories(quark PUBLIC ${GLM_INCLUDE_DIR})
+endif()
+
 find_package(OpenGL REQUIRED)
 if(OpenGL_FOUND)
   target_link_libraries(quark ${OPENGL_gl_LIBRARY})

@@ -21,7 +21,7 @@ public:
 
 class MyStage : public Stage {
 public:
-    MyStage(LoopController* lc) : Stage(lc) {}
+    MyStage(LoopController* lc) : Stage(lc, "Name", 1080, 720) {}
 };
 
 int main(){

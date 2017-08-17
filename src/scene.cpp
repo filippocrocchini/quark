@@ -38,8 +38,17 @@ void Scene::Update(double delta){
 //NOTE: This thread should be running graphics
 void Scene::Render(Renderer* renderer){
     for(auto go_itr = gameobjects.begin(); go_itr != gameobjects.end(); go_itr++){
-      auto rectangle_mesh = go_itr->second->GetComponent<RectangleMesh>();
-      if(rectangle_mesh)
-        renderer->drawRectangleMesh(rectangle_mesh);
+        auto transform = go_itr->second->GetComponent<Transform>();
+
+        auto rectangle_mesh = go_itr->second->GetComponent<RectangleMesh>();
+        if(rectangle_mesh)
+            renderer->drawRectangleMesh(rectangle_mesh);
+        
+
+        if(transform){
+            auto sprite_renderer = go_itr->second->GetComponent<SpriteRenderer>();
+            if(sprite_renderer)
+                renderer->drawSpriteRenderer(sprite_renderer, transform);
+        }
     }
 }

@@ -25,9 +25,10 @@ Stage::Stage(LoopController* controller, const std::string& name, unsigned width
         config.title = stage->GetName();
         config.width = stage->GetWidth();
         config.height = stage->GetHeight();
-        config.opengl_profile = GLFW_OPENGL_ANY_PROFILE;
-        config.opengl_major = 1;
-        config.opengl_minor = 1;
+        config.opengl_profile = GLFW_OPENGL_CORE_PROFILE;
+        config.opengl_major = 4;
+        config.opengl_minor = 0;
+        config.vsync = false;
 
         stage->window.SetConfiguration(config);
 
@@ -38,9 +39,6 @@ Stage::Stage(LoopController* controller, const std::string& name, unsigned width
 		    std::cerr << "[RenderThread] Failed to initialize GLEW.\n";
             return 1;
         }
-
-        glMatrixMode(GL_MODELVIEW);
-        glColor3f(1,1,1);
 
         return 0;
     });

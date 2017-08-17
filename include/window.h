@@ -85,6 +85,8 @@ public:
 	void Recreate(); // destroys the window and creates a new one
 	void Destroy(); // deletes this window (glfwDestroyWindow)
 
+    int GetWidth() { return config.width; }
+    int GetHeight() { return config.height; }
 private:
 	static std::map<GLFWwindow*, Window*> handle_to_ptr;
 

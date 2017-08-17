@@ -41,7 +41,7 @@ private:
     LoopingThread update_thread;
 
     std::map<std::string, std::unique_ptr<Scene>> scenes;
-    Renderer renderer;
+    Renderer renderer{&window};
     Scene* current_scene;
 
     std::string name;
