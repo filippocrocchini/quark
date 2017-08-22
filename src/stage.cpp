@@ -3,6 +3,7 @@
 */
 
 #include <GL/glew.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include "stage.h"
 
 #include <memory>
@@ -25,9 +26,10 @@ Stage::Stage(LoopController* controller, const std::string& name, unsigned width
         config.title = stage->GetName();
         config.width = stage->GetWidth();
         config.height = stage->GetHeight();
-        config.opengl_profile = GLFW_OPENGL_CORE_PROFILE;
+        config.opengl_profile = GLFW_OPENGL_ANY_PROFILE;
         config.opengl_major = 4;
         config.opengl_minor = 0;
+        config.antialiasing = 16;
         config.vsync = false;
 
         stage->window.SetConfiguration(config);
@@ -40,12 +42,19 @@ Stage::Stage(LoopController* controller, const std::string& name, unsigned width
             return 1;
         }
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0, 105/255.f, 249/255.f, 1);
+        stage->renderer.SetProjection(glm::ortho(0.f, (float)stage->window.GetWidth(), 0.f, (float)stage->window.GetHeight(), 0.f, 1000.f));
         return 0;
     });
     render_thread.SetOnLoop([stage](){
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        if(stage->current_scene)
+        if(stage->current_scene){
             stage->current_scene->Render(&(stage->renderer));
+            stage->renderer.RenderBatches();
+        }
         stage->window.SwapBuffers();
     });
     render_thread.SetOnStop([stage]() {

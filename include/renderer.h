@@ -5,22 +5,24 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "window.h"
+#include <glm/glm.hpp>
+
 #include "components.h"
 #include "material.h"
+#include "spritebatch.h"
 
 class Renderer {
 public:
-    Renderer(Window* window) : window(window) {}
+    Renderer(const glm::mat4& projection_matrix) : projection_matrix(projection_matrix) {}
+    Renderer() : Renderer(glm::mat4(1)) {}
 
-    void drawRectangleMesh(RectangleMesh* rectangleMesh);
-    void drawSpriteRenderer(SpriteRenderer* sprite_renderer, Transform* transform);
+    void SubmitSprite(Sprite* sprite, Transform* transform);
+    void SetProjection(const glm::mat4& projection_matrix) { this->projection_matrix = projection_matrix; }
 
-    void BindMaterial(Material* m);
+    void RenderBatches();
 private:
-    static int RectangleVao();
-
-    Window* window; //FIXME: Not too sure about this
+    std::map<Material*, SpriteBatch> sprite_batches;
+    glm::mat4 projection_matrix;
 };
 
 #endif //  RENDERER_H

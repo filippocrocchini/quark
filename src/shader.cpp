@@ -5,14 +5,23 @@
 #include "shader.h"
 
 #include <GL/glew.h>
-#include <iostream>
+#include <fstream>
+#include <sstream>
 
 unsigned Shader::current_shader = 0;
 
 bool compileShader(GLuint type, GLuint& handle, const std::string& source, std::string& compile_log);
+std::string loadFile(const std::string& path);
 
-Shader::Shader(const std::string& vertex_code, const std::string& fragment_code, const std::string& geometry_code):
-    vertex_code(vertex_code), fragment_code(fragment_code), geometry_code(geometry_code) {}
+Shader::Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path):
+    vertex_path(vertex_path), fragment_path(fragment_path), geometry_path(geometry_path) {}
+
+bool Shader::Load(){
+    vertex_code = loadFile(vertex_path);
+    fragment_code = loadFile(fragment_path);
+    geometry_code = loadFile(geometry_path);
+    return !vertex_code.empty() && !fragment_code.empty();
+}
 
 void Shader::Bind(){
     if(!is_built && !build_failed){
@@ -220,4 +229,22 @@ bool compileShader(GLuint type, GLuint& handle, const std::string& source, std::
         return false;
     }
     return true;
+}
+
+std::string loadFile(const std::string& path){
+    if(path.empty())
+	   return "";
+
+	std::ifstream file;
+	std::stringstream raw;
+
+	file.open(path);
+	if (!file.is_open()) {
+		file.close();
+		std::cerr << "File " + path + " can't be opened for reading." << std::endl;
+		return "";
+	}
+	raw << file.rdbuf();
+	file.close();
+    return raw.str();
 }

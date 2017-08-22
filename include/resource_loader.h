@@ -21,20 +21,22 @@ public:
     void Load(Registry<std::string, Resource>* resource_reg, const std::string& name, Args&&... args){
         finished_loading = false;
 
-        load_functions_queue.push(std::bind([=](Args... args2){
-            std::unique_ptr<T> res = std::unique_ptr<T>{new T{std::forward<Args>(args2)...}};
+        load_functions_queue.push([=](){
+            std::unique_ptr<T> res = std::unique_ptr<T>{new T{args...}};
             if(res->Load()) {
                 res->onLoad();
                 resource_reg->Register(name, std::move(res));
             } else
                 res->onFail();
-       }, args...));
+       });
     }
 
     bool Done(){
         return load_functions_queue.empty() && finished_loading;
     }
 
+    int GetQueueSize() { return load_functions_queue.size(); }
+    
     void WaitUntilDone();
     void WaitUntilDone(const int timeout);
 protected:

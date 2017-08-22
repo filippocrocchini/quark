@@ -19,6 +19,12 @@ if(OpenGL_FOUND)
   target_include_directories(quark PUBLIC ${OPENGL_INCLUDE_DIR})
 endif()
 
+find_package(SOIL2 REQUIRED)
+if(SOIL2_FOUND)
+  target_link_libraries(quark ${SOIL2_LIBRARIES})
+  target_include_directories(quark PUBLIC ${SOIL2_INCLUDE_DIR})
+endif()
+
 find_package(GLEW REQUIRED)
 if(GLEW_FOUND)
   target_link_libraries(quark ${GLEW_LIBRARIES})

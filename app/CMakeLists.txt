@@ -9,3 +9,5 @@ include_directories(include)
 
 add_executable(App ${APP_SOURCE_FILES} ${QUARK_INCLUDE_FILES} ${APP_INCLUDE_FILES})
 target_link_libraries(App quark)
+
+install(DIRECTORY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

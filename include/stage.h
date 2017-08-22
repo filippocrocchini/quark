@@ -30,6 +30,8 @@ public:
     const std::string& GetName() const { return name; }
     unsigned GetWidth() { return width; }
     unsigned GetHeight() { return height; }
+
+    float GetFPS() { return 1.0/render_thread.GetDelta(); }
 protected:
     Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height);
     Stage() = default;
@@ -41,7 +43,7 @@ private:
     LoopingThread update_thread;
 
     std::map<std::string, std::unique_ptr<Scene>> scenes;
-    Renderer renderer{&window};
+    Renderer renderer;
     Scene* current_scene;
 
     std::string name;

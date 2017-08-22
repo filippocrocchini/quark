@@ -8,17 +8,22 @@
 #include <glm/glm.hpp>
 
 #include "shader.h"
+#include "texture.h"
 
 class Material {
 public:
-    Material(const glm::vec3& diffuse_color, Shader* shader) : diffuse_color(diffuse_color), shader(shader) {}
-    const glm::vec3& GetDiffuseColor() { return diffuse_color; }
-    void SetDiffuseColor(const glm::vec3& color) { this->diffuse_color = color; }
+    Material(const glm::vec4& diffuse_color, Texture* texture, Shader* shader) : diffuse_color(diffuse_color), shader(shader), texture(texture) {}
+
+    void SetDiffuseColor(const glm::vec4& color) { this->diffuse_color = color; }
+    void SetTexture(Texture* texture) { this->texture = texture; }
+
+    const glm::vec4& GetDiffuseColor() { return diffuse_color; }
     Shader* GetShader() { return shader; }
+    Texture* GetTexture() { return texture; }
 private:
-    glm::vec3 diffuse_color;
+    glm::vec4 diffuse_color;
     Shader* shader;
-    //Texture* texture;
+    Texture* texture;
 };
 
 #endif  // MATERIAL_H

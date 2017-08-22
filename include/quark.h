@@ -6,6 +6,7 @@
 #define QUARK_H
 
 #include <string>
+#include <SOIL2.h>
 
 #include "looping_thread.h"
 #include "resource_loader.h"
