@@ -32,7 +32,7 @@ void Scene::Update(double delta){
         for(auto b_itr = behaviours.begin(); b_itr != behaviours.end(); b_itr++)
             (*b_itr)->Update(delta);
         for(auto b_itr = behaviours.begin(); b_itr != behaviours.end(); b_itr++)
-          (*b_itr)->LateUpdate(delta);
+            (*b_itr)->LateUpdate(delta);
       }
   }
 }
@@ -41,13 +41,13 @@ void Scene::Update(double delta){
 void Scene::Render(Renderer* renderer){
     for(auto go_itr = gameobjects.begin(); go_itr != gameobjects.end(); go_itr++){
         if(go_itr->second->isEnabled()){
-        auto transform = go_itr->second->GetComponent<Transform>();
+            auto transform = go_itr->second->GetComponent<Transform>();
 
-        if(transform){
-            auto sprite = go_itr->second->GetComponent<Sprite>();
-            if(sprite)
-                renderer->SubmitSprite(sprite, transform);
+            if(transform){
+                auto sprite = go_itr->second->GetComponent<Sprite>();
+                if(sprite)
+                    renderer->SubmitSprite(sprite, transform);
+            }
         }
-    }
     }
 }

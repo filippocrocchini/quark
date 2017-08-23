@@ -26,15 +26,19 @@ public:
     }
 
     template <typename T>
-    T* GetComponent(const std::string& name){
-      return static_cast<T*>(components.at(name).get());
+        T* GetComponent(const std::string& name){
+        auto cmp_itr = components.find(name);
+        if(cmp_itr == components.end())
+            return nullptr;
+        return dynamic_cast<T*>(cmp_itr->second.get());
     }
 
     template <typename T>
     T* GetComponent(){
-      auto cmp_itr = components.find(abi::__cxa_demangle(typeid(T).name(),0,0,0));
-      if(cmp_itr == components.end()) return nullptr;
-      return static_cast<T*>(cmp_itr->second.get());
+        char* name = abi::__cxa_demangle(typeid(T).name(),0,0,0);
+        T* result = GetComponent<T>(name);
+        free(name);
+      return result;
     }
 
     const std::string& GetName() const { return name; }

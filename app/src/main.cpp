@@ -14,14 +14,11 @@ class Dummy : public Resource {
 public:
     Dummy(){
     }
-
     virtual bool Load() override {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         return true;
     }
-
     virtual void onLoad() override {}
-
     virtual void onFail() override {}
 };
 
@@ -40,7 +37,7 @@ void loadStartupResources() {
 void preloadResources() {
     for(int i=0;i<10;i++){
         eng.LoadResource<Dummy>(std::string("dummy") + std::to_string(i));
-    }    
+    }
 }
 
 void setupLoadingScreen(Material* sprite_material){
@@ -70,7 +67,10 @@ int main(){
 
     setupLoadingScreen(&sprite_material);
     stage->SetCurrentScene("loading_screen");
+
     preloadResources();
+
+    eng.WaitForResources();
 
     eng.Join();
     return 0;

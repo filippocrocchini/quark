@@ -63,10 +63,10 @@ public:
     glm::quat rotation;
     glm::vec3 pivot;
 
-    Transform(glm::vec3 position, glm::vec3 scale, glm::quat rotation, glm::vec3 pivot) :
+    Transform(const glm::vec3& position, const glm::vec3& scale, const glm::quat& rotation, const glm::vec3& pivot) :
          position(position), scale(scale), rotation(rotation), pivot(pivot) {}
 
-    Transform(glm::vec3 position, glm::vec3 scale, glm::quat rotation) :
+    Transform(const glm::vec3& position, const glm::vec3& scale, const glm::quat& rotation) :
          Transform(position, scale, rotation, glm::vec3(0)){}
 
     const glm::mat4& GetMatrix();
