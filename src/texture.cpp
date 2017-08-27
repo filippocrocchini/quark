@@ -4,6 +4,7 @@
 
 #include "./texture.h"
 
+#include <GL/glew.h>
 #include <SOIL2.h>
 
 Texture::~Texture() {

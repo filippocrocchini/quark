@@ -58,7 +58,8 @@ void SpriteBatch::Delete() {
 }
 
 void SpriteBatch::AddSprite(const glm::vec4& color, Transform* transform) {
-    if (sprite_count >= max_sprites) return;
+    if (sprite_count >= max_sprites)
+        return;
     if (vao == 0)
         Create();
     if (sprite_count == 0) {
@@ -69,8 +70,11 @@ void SpriteBatch::AddSprite(const glm::vec4& color, Transform* transform) {
         color_buffer_mapping = (glm::vec4*) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
         glUnmapBuffer(GL_ARRAY_BUFFER);
     }
-    if (!matrix_buffer_mapping || !color_buffer_mapping) return;
+    if (!matrix_buffer_mapping || !color_buffer_mapping)
+        return;
     matrix_buffer_mapping[sprite_count] = transform->GetMatrix2D();
+
+    glm::mat3 mat = transform->GetMatrix2D();
     color_buffer_mapping[sprite_count] = color;
     sprite_count++;
 }

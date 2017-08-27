@@ -30,7 +30,7 @@ void Renderer::RenderBatches() {
             s->Bind();
             s->SetUniform("u_projection", projection_matrix);
             s->SetUniform("u_color", batch_pair->first->GetDiffuseColor());
-            if (texture) {
+            if (texture != nullptr) {
                 texture->Bind(0);
                 s->SetUniform("u_texture", 0);
                 s->SetUniform("u_has_texture", 1);

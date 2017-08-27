@@ -10,6 +10,6 @@
 extern const char MENU_SCREEN_SCENE[];
 
 extern void loadMenuScreenResources();
-extern void initMenuScreen();
+extern bool initMenuScreen();
 
 #endif  //NOLINT() MENU_SCREEN_H

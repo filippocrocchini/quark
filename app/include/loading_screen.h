@@ -8,6 +8,6 @@
 #include <quark.h>
 
 extern const char LOADING_SCREEN_SCENE[];
-extern void initLoadingScreen();
+extern bool initLoadingScreen();
 
 #endif  //NOLINT() LOADING_SCREEN_H
