@@ -2,22 +2,22 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#include "looping_thread.h"
+#include "./looping_thread.h"
 
-#include <chrono>
+#include <chrono>  // NOLINT()
 
 LoopingThread::LoopingThread(LoopController* controller, std::function<void(void)> on_loop) : controller(controller), on_loop(on_loop) {}
-LoopingThread::LoopingThread(LoopController* controller) : LoopingThread(controller, nullptr){}
+LoopingThread::LoopingThread(LoopController* controller) : LoopingThread(controller, nullptr) {}
 LoopingThread::LoopingThread() : LoopingThread(nullptr, nullptr) {}
 
-void LoopingThread::Start(){
+void LoopingThread::Start() {
     worker = std::thread{
-    	[this]() {
-            if(OnInitialize() == 0){
+        [this]() {
+            if (OnInitialize() == 0) {
                 auto last = std::chrono::high_resolution_clock::now();
                 auto now = std::chrono::high_resolution_clock::now();
 
-                while(this->controller->isRunning()){
+                while (this->controller->isRunning()) {
                     now = std::chrono::high_resolution_clock::now();
                     this->delta_time = std::chrono::duration<double>(now - last).count();
                     last = now;
@@ -29,25 +29,25 @@ void LoopingThread::Start(){
     };
 }
 
-int LoopingThread::OnInitialize(){
-    if(this->on_initialize){
+int LoopingThread::OnInitialize() {
+    if (this->on_initialize) {
         return this->on_initialize();
     }
     return 0;
 }
 
-void LoopingThread::Loop(){
-    if(this->on_loop){
+void LoopingThread::Loop() {
+    if (this->on_loop) {
         this->on_loop();
     }
 }
 
-void LoopingThread::OnStop(){
-    if(this->on_stop){
+void LoopingThread::OnStop() {
+    if (this->on_stop) {
         this->on_stop();
     }
 }
 
-void LoopingThread::Join(){
+void LoopingThread::Join() {
     worker.join();
 }

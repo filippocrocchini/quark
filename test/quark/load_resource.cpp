@@ -1,36 +1,32 @@
-#include "quark.h"
+/*
+* Copyright (C) 2017 Filippo Crocchini.
+*/
+
+#include "./quark.h"
 
 class Dummy : public Resource {
-public:
+ public:
     int value;
-    Dummy(int value):value(value){
-    }
+    explicit Dummy(int value): value(value) {}
 
-    virtual bool Load() override {
+    bool Load() override {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         return true;
     }
 
-    virtual void onLoad() override {}
-
-    virtual void onFail() override {}
+    void onLoad() override {}
+    void onFail() override {}
 };
 
-
-Quark eng{"Hello", 1080, 720};
-
-int main(){
-    eng.Start();
-
-    eng.LoadResource<Dummy>("One", 1);
-    eng.WaitForResources();
-
-    Dummy* one = eng.GetResource<Dummy>("One");
-
-    if(one == nullptr || one->value != 1){
-        eng.Stop();
+int main() {
+    Quark::Start();
+    Quark::LoadResource<Dummy>("One", 1);
+    Quark::WaitForResources();
+    Dummy* one = Quark::GetResource<Dummy>("One");
+    if (one == nullptr || one->value != 1) {
+        Quark::Stop();
         return 1;
     }
-    eng.Stop();
+    Quark::Stop();
     return 0;
 }

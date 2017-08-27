@@ -2,16 +2,17 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef SPRITEBATCH_H
+#ifndef SPRITEBATCH_H  // NOLINT()
 #define SPRITEBATCH_H
 
-#include <vector>
 #include <glm/glm.hpp>
 
-#include "components.h"
+#include <vector>
+
+#include "./components.h"
 
 class SpriteBatch {
-public:
+ public:
     static const int max_sprites;
     static const int elements_per_sprite;
     static const int sprite_vertices_size;
@@ -24,11 +25,12 @@ public:
 
     bool isEmpty() { return sprite_count == 0; }
     unsigned GetSpriteCount() { return sprite_count; }
-private:
+
+ private:
     unsigned vao, matrix_buffer, color_buffer, sprite_count;
     unsigned element_buffer, vertex_buffer, uv_buffer;
     glm::mat3* matrix_buffer_mapping;
     glm::vec4* color_buffer_mapping;
 };
 
-#endif // SPRITEBATCH_H
+#endif // NOLINT() SPRITEBATCH_H

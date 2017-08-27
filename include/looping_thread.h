@@ -2,35 +2,35 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef LOOPING_THREAD_H
+#ifndef LOOPING_THREAD_H  // NOLINT()
 #define LOOPING_THREAD_H
 
-#include <thread>
 #include <functional>
-#include <mutex>
 #include <atomic>
+#include <thread>  // NOLINT()
+#include <mutex>  // NOLINT()
 
 class LoopController{
-public:
-    LoopController(){
+ public:
+    LoopController() {
         running.store(true);
     }
     virtual ~LoopController() = default;
 
-    bool isRunning(){
+    bool isRunning() {
         return running.load();
     }
-    virtual void Stop(){
+    virtual void Stop() {
         running.store(false);
     }
-private:
+ private:
     std::atomic<bool> running;
 };
 
 class LoopingThread {
-public:
+ public:
     LoopingThread(LoopController* controller, std::function<void(void)> loop);
-    LoopingThread(LoopController* controller);
+    explicit LoopingThread(LoopController* controller);
     LoopingThread();
 
     virtual ~LoopingThread() = default;
@@ -38,16 +38,18 @@ public:
     void Start();
     void Join();
 
-    void SetOnInitialization(std::function<int(void)> on_initialize){this->on_initialize = on_initialize;}
-    void SetOnLoop(std::function<void(void)> on_loop){this->on_loop = on_loop;}
-    void SetOnStop(std::function<void(void)> on_stop){this->on_stop = on_stop;}
+    void SetOnInitialization(std::function<int(void)> on_initialize) {this->on_initialize = on_initialize;}
+    void SetOnLoop(std::function<void(void)> on_loop) {this->on_loop = on_loop;}
+    void SetOnStop(std::function<void(void)> on_stop) {this->on_stop = on_stop;}
 
     double GetDelta() { return delta_time; }
-protected:
+
+ protected:
     virtual int OnInitialize();
     virtual void Loop();
     virtual void OnStop();
-private:
+
+ private:
     LoopController* controller;
     std::function<int(void)> on_initialize;
     std::function<void(void)> on_loop, on_stop;
@@ -57,4 +59,4 @@ private:
     std::thread worker;
 };
 
-#endif  // LOOPING_THREAD_H
+#endif  // NOLINT() LOOPING_THREAD_H

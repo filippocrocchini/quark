@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 
-GLFWwindow* createWindow(){
+GLFWwindow* createWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_RESIZABLE, true);
@@ -14,7 +14,7 @@ GLFWwindow* createWindow(){
     return windowHandle;
 }
 
-int main(){
+int main() {
     if(!glfwInit())
         return 1;
 

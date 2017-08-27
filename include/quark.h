@@ -2,69 +2,46 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef QUARK_H
+#ifndef QUARK_H  // NOLINT()
 #define QUARK_H
 
 #include <string>
+#include <utility>
 #include <SOIL2.h>
 
-#include "looping_thread.h"
-#include "resource_loader.h"
-#include "registry.h"
-#include "stage.h"
+#include "./looping_thread.h"
+#include "./resource_loader.h"
+#include "./registry.h"
+#include "./stage.h"
 
-class Quark{
-public:
-    Quark(const std::string& name, unsigned width, unsigned height) : resource_loader(&thread_controller), stage(&thread_controller, name, width, height) {}
+namespace Quark {
 
-    virtual ~Quark(){
-        if(thread_controller.isRunning()){
-            Stop();
-        }
-    };
+extern Registry<std::string, Resource> resource_reg;
+extern LoopController thread_controller;
+extern ResourceLoader resource_loader;
+extern Stage stage;
+extern bool threads_started;
 
-    void Start(){
-        if(!threads_started){
-            threads_started = true;
-            resource_loader.Start();
-            stage.Start();
-        }
-    }
+extern void Setup(const std::string& title, int width, int height);
+extern void Start();
+extern void Stop();
+extern void Join();
 
-    void Stop(){
-        thread_controller.Stop();
-        Join();
-    }
+extern void WaitForResources();
 
-    void Join(){
-        resource_loader.Join();
-        stage.Join();
-    }
+template<typename T, typename... Args>
+void LoadResource(const std::string& name, Args&&... args) {
+    resource_loader.Load<T>(&resource_reg, name, std::forward<Args>(args)...);
+}
 
-    void WaitForResources(){
-        resource_loader.WaitUntilDone();
-    }
+template<typename T>
+T* GetResource(const std::string& name) {
+    return resource_reg.Get<T>(name);
+}
 
-    template<typename T, typename... Args>
-    void LoadResource(const std::string& name, Args&&... args){
-        resource_loader.Load<T>(&resource_reg, name, std::forward<Args>(args)...);
-    }
+// extern Registry<std::string, Resource>* GetResourceRegistry();
+// extern ResourceLoader* GetResourceLoader();
+// extern Stage* GetStage();
+}  // namespace Quark
 
-    template<typename T>
-    T* GetResource(const std::string& name){
-        return resource_reg.Get<T>(name);
-    }
-
-    Registry<std::string, Resource>* GetResourceRegistry(){ return &resource_reg;}
-    ResourceLoader* GetResourceLoader(){ return &resource_loader;}
-    Stage* GetStage() { return &stage; }
-private:
-    Registry<std::string, Resource> resource_reg;
-    LoopController thread_controller;
-    ResourceLoader resource_loader;
-    Stage stage;
-
-    bool threads_started = false;
-};
-
-#endif  // QUARK_H
+#endif  // NOLINT() QUARK_H

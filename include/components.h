@@ -2,32 +2,33 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef COMPONENTS_H
+#ifndef COMPONENTS_H  // NOLINT()
 #define COMPONENTS_H
+
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <cxxabi.h>
 
 #include <map>
 #include <memory>
 #include <string>
 #include <type_traits>
-#include <cxxabi.h>
+#include <utility>
 
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
-
-#include "toggleable.h"
-#include "material.h"
+#include "./toggleable.h"
+#include "./material.h"
 
 class GameObject;
 
 class Component : public Toggleable {
-public:
+ public:
     virtual ~Component() = default;
 
     template<typename T, typename... Args>
     static T* Create(Args&&... args) {
       static_assert(std::is_base_of<Component, T>::value);
       T* comp = new T{std::forward<Args>(args)...};
-      comp->name = abi::__cxa_demangle(typeid(T).name(), 0,0,0);
+      comp->name = abi::__cxa_demangle(typeid(T).name(), 0, 0, 0);
       return comp;
     }
 
@@ -38,17 +39,18 @@ public:
 
     void SetParent(GameObject* parent);
     const std::string& GetName() const { return name; }
-    virtual bool isEnabled() override;
+    bool isEnabled() override;
 
-protected:
+ protected:
     GameObject* parent;
     Component() = default;
-private:
+
+ private:
     std::string name;
 };
 
 class Behaviour : public Component {
-public:
+ public:
   virtual ~Behaviour() = default;
 
   virtual void Update(double delta) = 0;
@@ -56,7 +58,7 @@ public:
 };
 
 class Transform : public Component {
-public:
+ public:
     bool dirty = true, dirty_2d = true;
     glm::vec3 position;
     glm::vec3 scale;
@@ -67,7 +69,7 @@ public:
          position(position), scale(scale), rotation(rotation), pivot(pivot) {}
 
     Transform(const glm::vec3& position, const glm::vec3& scale, const glm::quat& rotation) :
-         Transform(position, scale, rotation, glm::vec3(0)){}
+         Transform(position, scale, rotation, glm::vec3(0)) {}
 
     const glm::mat4& GetMatrix();
     const glm::mat3& GetMatrix2D();
@@ -83,20 +85,22 @@ public:
     void SetRotation(const glm::quat& rotation) { dirty = true; dirty_2d = true; this->rotation = rotation; }
 
     glm::vec2 ApplyTo(const glm::vec2& vector);
-private:
 
+ private:
     glm::mat4 matrix;
     glm::mat3 matrix_2d;
 };
 
 class Sprite : public Component {
-public:
+ public:
     Material* material;
     glm::vec4 color;
 
     Sprite(Material* material, glm::vec4 color) : material(material), color(color) {}
-    Sprite(Material* material) : Sprite(material, glm::vec4(1)) {}
+    explicit Sprite(Material* material) : Sprite(material, glm::vec4(1)) {}
+    explicit Sprite(glm::vec4 color) : material(nullptr), color(color) {}
+
     virtual ~Sprite() = default;
 };
 
-#endif  // COMPONENTS_H
+#endif  // NOLINT() COMPONENTS_H

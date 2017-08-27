@@ -11,7 +11,7 @@ uniform vec4 u_color;
 out vec4 frag_color;
 out vec2 frag_pos;
 
-void main(){
+void main() {
   frag_pos = v_uv;
   frag_color = v_color * u_color;
   gl_Position =  u_projection * vec4(v_model * vec3(v_pos,1),1);

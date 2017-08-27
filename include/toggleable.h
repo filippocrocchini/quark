@@ -2,32 +2,32 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef TOGGLEABLE_H
+#ifndef TOGGLEABLE_H  // NOLINT()
 #define TOGGLEABLE_H
 
 class Toggleable {
-public:
-    Toggleable(bool enabled) : enabled(enabled){}
+ public:
+    explicit Toggleable(bool enabled) : enabled(enabled) {}
     Toggleable() : enabled(true) {}
 
-    virtual bool isEnabled(){
+    virtual bool isEnabled() {
         return enabled;
     }
 
-    virtual void Enable(){
+    virtual void Enable() {
         enabled = true;
     }
 
-    virtual void Disable(){
+    virtual void Disable() {
         enabled = false;
     }
 
-    virtual void Toggle(){
+    virtual void Toggle() {
         enabled = !enabled;
     }
 
-protected:
+ protected:
     bool enabled;
 };
 
-#endif  // TOGGLEABLE_H
+#endif  // NOLINT() TOGGLEABLE_H

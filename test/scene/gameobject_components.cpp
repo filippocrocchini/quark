@@ -13,13 +13,13 @@ private:
     int num;
 };
 
-int main(){
+int main() {
     /*GameObject* go;
 
     go = s.CreateGameObject("Go");
     go->AddComponent<TComp>(11);
 
-    if(s.GetGameObject("Go")->GetComponent<TComp>()->GetNum() == 11){
+    if(s.GetGameObject("Go")->GetComponent<TComp>()->GetNum() == 11) {
         s.DeleteGameObject("Go");
         if(s.GetGameObject("Go") == nullptr) return 0;
     }

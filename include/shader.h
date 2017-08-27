@@ -2,7 +2,7 @@
  * Copyright (C) 2017 Filippo Crocchini.
  */
 
-#ifndef SHADER_H
+#ifndef SHADER_H  // NOLINT()
 #define SHADER_H
 
 #include <glm/glm.hpp>
@@ -10,21 +10,21 @@
 #include <map>
 #include <iostream>
 
-#include "resource.h"
+#include "./resource.h"
 
 class Shader : public Resource {
-public:
-    //IDEA: custom shader file so that you can do something like:
-    //      Shader(const std::string& shader_path)
+ public:
+    // IDEA(filippocrocchini): custom shader file so that you can do something like:
+    // Shader(const std::string& shader_path)
 
     Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path);
     Shader(const std::string& vertex_path, const std::string& fragment_path) : Shader(vertex_path, fragment_path, "") {}
 
-    virtual bool Load() override;
-    virtual void onLoad() override {
+    bool Load() override;
+    void onLoad() override {
         std::cout << "Loaded the shader " << vertex_path << " " << fragment_path << " " << geometry_path << std::endl;
     }
-    virtual void onFail() override {
+    void onFail() override {
         std::cerr << "Failed loading the shader " << vertex_path << " " << fragment_path << " " << geometry_path << std::endl;
     }
 
@@ -39,7 +39,8 @@ public:
 
     void Bind();
     bool isBound() { return gl_handle == current_shader;}
-private:
+
+ private:
     static unsigned current_shader;
 
     std::map<std::string, unsigned> uniform_locations;
@@ -57,7 +58,6 @@ private:
     bool Validate();
 
     int FindUniformLocation(const std::string& name);
-
 };
 
-#endif  // SHADER_H
+#endif  // NOLINT() SHADER_H

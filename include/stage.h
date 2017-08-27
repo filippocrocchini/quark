@@ -2,22 +2,24 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef STAGE_H
+#ifndef STAGE_H  // NOLINT()
 #define STAGE_H
 
 #include <type_traits>
 #include <memory>
+#include <map>
+#include <string>
 
-#include "window.h"
-#include "looping_thread.h"
-#include "scene.h"
-#include "renderer.h"
-
-class Quark;
+#include "./window.h"
+#include "./looping_thread.h"
+#include "./scene.h"
+#include "./renderer.h"
 
 class Stage {
-    friend class Quark;
-public:
+ public:
+    Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height);
+    Stage() = default;
+
     void Start();
     void Join();
 
@@ -26,16 +28,18 @@ public:
     Scene* GetScene(const std::string& name);
 
     void SetCurrentScene(const std::string& name);
+    void SetTitle(const std::string& title) { name = title; }
+    void SetSize(unsigned width, unsigned height) { this->width = width; this->height = height; }
 
     const std::string& GetName() const { return name; }
     unsigned GetWidth() { return width; }
     unsigned GetHeight() { return height; }
 
     float GetFPS() { return 1.0/render_thread.GetDelta(); }
-protected:
-    Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height);
-    Stage() = default;
-private:
+
+    Window* GetWindow() { return &window; }
+
+ private:
     Window window;
 
     LoopController* controller;
@@ -50,4 +54,4 @@ private:
     unsigned width, height;
 };
 
-#endif //  STAGE_H
+#endif  // NOLINT() STAGE_H

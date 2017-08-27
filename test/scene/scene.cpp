@@ -14,7 +14,7 @@ public:
         late_updated = updated;
     }
 
-    bool isUpdated(){
+    bool isUpdated() {
         return updated && late_updated;
     }
 };
@@ -24,7 +24,7 @@ public:
     MyStage(LoopController* lc) : Stage(lc, "Name", 1080, 720) {}
 };
 
-int main(){
+int main() {
     LoopController lc;
     MyStage stage{&lc};
 

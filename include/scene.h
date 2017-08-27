@@ -2,16 +2,20 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef SCENE_H
+#ifndef SCENE_H  // NOLINT()
 #define SCENE_H
 
-#include "gameobject.h"
-#include "renderer.h"
+#include <map>
+#include <string>
+#include <memory>
+
+#include "./gameobject.h"
+#include "./renderer.h"
 
 class Stage;
 
 class Scene {
-public:
+ public:
     GameObject* CreateGameObject(const std::string& name);
     void DeleteGameObject(const std::string& name);
     GameObject* GetGameObject(const std::string& name);
@@ -20,13 +24,14 @@ public:
     void Render(Renderer* renderer);
 
     const std::string& GetName() { return name; }
-private:
+
+ private:
     friend class Stage;
-    Scene(const std::string& name);
+    explicit Scene(const std::string& name);
     Scene();
 
     std::string name;
     std::map<std::string, std::unique_ptr<GameObject>> gameobjects;
 };
 
-#endif  // SCENE_H
+#endif  // NOLINT() SCENE_H

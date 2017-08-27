@@ -1,6 +1,6 @@
 #include "looping_thread.h"
 
-int main(){
+int main() {
     LoopController l;
     if(!l.isRunning()) return 1;
     l.Stop();

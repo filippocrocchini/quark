@@ -8,9 +8,9 @@ out vec4 color;
 uniform sampler2D u_texture;
 uniform int u_has_texture;
 
-void main(){
+void main() {
   vec4 texture_color;
-  if(u_has_texture == 1){
+  if(u_has_texture == 1) {
     texture_color = texture(u_texture, frag_pos);
   } else {
     texture_color = vec4(1,1,1,1);

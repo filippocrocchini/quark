@@ -2,25 +2,25 @@
 * Copyright (C) 2017 Filippo Crocchini.
 */
 
-#ifndef TEXTURE_H
+#ifndef TEXTURE_H  // NOLINT()
 #define TEXTURE_H
 
 #include <array>
 #include <string>
 #include <iostream>
 
-#include "resource.h"
+#include "./resource.h"
 
 class Texture : public Resource{
-public:
-    Texture(const std::string& filepath, unsigned soil_flags) : filepath(filepath), soil_flags(soil_flags){}
+ public:
+    Texture(const std::string& filepath, unsigned soil_flags) : filepath(filepath), soil_flags(soil_flags) {}
     virtual ~Texture();
 
-    virtual bool Load() override;
-    virtual void onLoad() override{
+    bool Load() override;
+    void onLoad() override{
         std::cout<< "Loaded texture " << filepath << "." << std::endl;
     };
-    virtual void onFail() override{
+    void onFail() override{
         std::cerr<< "Failed loading texture " << filepath << "." << std::endl;
     };
 
@@ -31,7 +31,8 @@ public:
     void Delete();
 
     unsigned GetID() { return id; }
-private:
+
+ private:
     unsigned char* raw_data;
     std::string filepath;
     int height;
@@ -41,4 +42,4 @@ private:
     bool created = false;
 };
 
-#endif //  TEXTURE_H
+#endif  // NOLINT() TEXTURE_H
