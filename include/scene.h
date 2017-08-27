@@ -11,6 +11,7 @@
 
 #include "./gameobject.h"
 #include "./renderer.h"
+#include "./camera.h"
 
 class Stage;
 
@@ -27,10 +28,12 @@ class Scene {
 
  private:
     friend class Stage;
+    Scene(const std::string& name, Camera* main_camera);
     explicit Scene(const std::string& name);
     Scene();
 
     std::string name;
+    Camera* main_camera;
     std::map<std::string, std::unique_ptr<GameObject>> gameobjects;
 };
 

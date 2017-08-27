@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-unsigned Shader::current_shader = 0;
+uint Shader::current_shader = 0;
 
 bool compileShader(GLuint type, GLuint *handle, const std::string& source, std::string* compile_log);
 std::string loadFile(const std::string& path);

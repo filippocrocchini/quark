@@ -13,7 +13,8 @@
 
 class Texture : public Resource{
  public:
-    Texture(const std::string& filepath, unsigned soil_flags) : filepath(filepath), soil_flags(soil_flags) {}
+    Texture(const std::string& filepath, uint soil_flags) : filepath(filepath), soil_flags(soil_flags) {}
+    explicit Texture(const std::string& filepath) : Texture(filepath, 0) {}
     virtual ~Texture();
 
     bool Load() override;
@@ -30,14 +31,14 @@ class Texture : public Resource{
     void Create();
     void Delete();
 
-    unsigned GetID() { return id; }
+    uint GetID() { return id; }
 
  private:
-    unsigned char* raw_data;
+    uint8_t* raw_data;
     std::string filepath;
     int height;
     int width;
-    unsigned id, soil_flags;
+    uint id, soil_flags;
     int soil_channels;
     bool created = false;
 };

@@ -38,13 +38,13 @@ void Window::SetTitle(const std::string& title) {
     glfwSetWindowTitle(window_handle, title.c_str());
 }
 
-void Window::SetSize(unsigned width, unsigned height) {
+void Window::SetSize(uint width, uint height) {
     config.width = width;
     config.height = height;
     Resize(window_handle, width, height);
 }
 
-void Window::SetPosition(unsigned x, unsigned y) {
+void Window::SetPosition(uint x, uint y) {
     config.x_position = x;
     config.y_position = y;
     glfwSetWindowPos(window_handle, x, y);
@@ -86,7 +86,7 @@ void Window::Create() {
     if (config.fullscreen) {
         int count;
         GLFWmonitor** monitors = glfwGetMonitors(&count);
-        if (config.monitor < (unsigned)count) {
+        if (config.monitor < (uint)count) {
             monitor = monitors[config.monitor];
         }
     }
@@ -163,7 +163,7 @@ void Window::Key(GLFWwindow* handle, int key, int scancode, int action, int mods
     }
 }
 
-void Window::Character(GLFWwindow* handle, unsigned int codepoint) {
+void Window::Character(GLFWwindow* handle, uint codepoint) {
     Window* window = GetWindow(handle);
 
     if (window != nullptr) {
@@ -172,7 +172,7 @@ void Window::Character(GLFWwindow* handle, unsigned int codepoint) {
     }
 }
 
-void Window::CharacterMod(GLFWwindow* handle, unsigned int codepoint, int mods) {
+void Window::CharacterMod(GLFWwindow* handle, uint codepoint, int mods) {
     Window* window = GetWindow(handle);
 
     if (window != nullptr) {

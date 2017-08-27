@@ -24,11 +24,11 @@ class SpriteBatch {
     void Flush();
 
     bool isEmpty() { return sprite_count == 0; }
-    unsigned GetSpriteCount() { return sprite_count; }
+    uint GetSpriteCount() { return sprite_count; }
 
  private:
-    unsigned vao, matrix_buffer, color_buffer, sprite_count;
-    unsigned element_buffer, vertex_buffer, uv_buffer;
+    uint vao, matrix_buffer, color_buffer, sprite_count;
+    uint element_buffer, vertex_buffer, uv_buffer;
     glm::mat3* matrix_buffer_mapping;
     glm::vec4* color_buffer_mapping;
 };

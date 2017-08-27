@@ -15,25 +15,35 @@
 #include "./scene.h"
 #include "./renderer.h"
 
+struct MouseInfo {
+    uint x, y;
+    uint8_t button;
+    bool pressed;
+    bool released;
+};
+
 class Stage {
  public:
-    Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height);
+    MouseInfo mouse;
+
+    Stage(LoopController* controller, const std::string& name, uint width, uint height);
     Stage() = default;
 
     void Start();
     void Join();
 
+    Scene* CreateScene(const std::string& name, Camera* main_camera);
     Scene* CreateScene(const std::string& name);
     void DeleteScene(const std::string& name);
     Scene* GetScene(const std::string& name);
 
     void SetCurrentScene(const std::string& name);
     void SetTitle(const std::string& title) { name = title; }
-    void SetSize(unsigned width, unsigned height) { this->width = width; this->height = height; }
+    void SetSize(uint width, uint height) { this->width = width; this->height = height; }
 
     const std::string& GetName() const { return name; }
-    unsigned GetWidth() { return width; }
-    unsigned GetHeight() { return height; }
+    uint GetWidth() { return width; }
+    uint GetHeight() { return height; }
 
     float GetFPS() { return 1.0/render_thread.GetDelta(); }
 
@@ -51,7 +61,7 @@ class Stage {
     Scene* current_scene;
 
     std::string name;
-    unsigned width, height;
+    uint width, height;
 };
 
 #endif  // NOLINT() STAGE_H

@@ -41,13 +41,13 @@ class Shader : public Resource {
     bool isBound() { return gl_handle == current_shader;}
 
  private:
-    static unsigned current_shader;
+    static uint current_shader;
 
-    std::map<std::string, unsigned> uniform_locations;
+    std::map<std::string, uint> uniform_locations;
     std::string vertex_code, fragment_code, geometry_code;
     std::string vertex_path, fragment_path, geometry_path;
     std::string vertex_log, fragment_log, geometry_log, link_log;
-    unsigned gl_handle, vertex_handle, fragment_handle, geometry_handle;
+    uint gl_handle, vertex_handle, fragment_handle, geometry_handle;
     bool is_built = false;
     bool build_failed = false;
 

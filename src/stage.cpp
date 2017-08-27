@@ -4,13 +4,14 @@
 
 #include "./stage.h"
 
+#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <memory>
 #include <string>
 #include <utility>
 
-Stage::Stage(LoopController* controller, const std::string& name, unsigned width, unsigned height) :
+Stage::Stage(LoopController* controller, const std::string& name, uint width, uint height) :
      controller(controller), render_thread(controller), update_thread(controller) {
     this->name = name;
     this->width = width;
@@ -47,20 +48,17 @@ Stage::Stage(LoopController* controller, const std::string& name, unsigned width
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glClearColor(0, 105/255.f, 249/255.f, 1);
-        stage->renderer.SetProjection(glm::ortho(0.f,
-                                                 static_cast<float>(stage->window.GetWidth()),
-                                                 0.f,
-                                                 static_cast<float>(stage->window.GetHeight()),
-                                                 0.f,
-                                                 1000.f));
         return 0;
     });
     render_thread.SetOnLoop([stage]() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if (stage->current_scene->main_camera == nullptr)
+            return;
+
+        stage->current_scene->main_camera->SetupContext();
+
         if (stage->current_scene) {
             stage->current_scene->Render(&(stage->renderer));
-            stage->renderer.RenderBatches();
+            stage->renderer.RenderBatches(stage->current_scene->main_camera);
         }
         stage->window.SwapBuffers();
     });
@@ -79,7 +77,40 @@ Stage::Stage(LoopController* controller, const std::string& name, unsigned width
 
         if (stage->current_scene)
             stage->current_scene->Update(stage->update_thread.GetDelta());
+
+        if (stage->mouse.released)
+            stage->mouse.released = false;
     });
+
+    /*
+    ResizeCallback resize_callback = nullptr;
+    KeyCallback key_callback = nullptr;
+    CharacterCallback character_callback = nullptr;
+    CharacterWithModifierCallback character_with_modifier_callback = nullptr;
+    CursorPositionCallback cursor_callback = nullptr;
+    MouseButtonCallback mouse_button_callback = nullptr;
+    ScrollCallback scroll_callback = nullptr;
+
+    typedef void(*CursorPositionCallback)(Window*, double, double);
+    typedef void(*MouseButtonCallback)(Window*, int, int, int);
+    */
+
+    window.cursor_callback = [stage](Window* window, double x, double y) {
+        stage->mouse.x = x;
+        stage->mouse.y = y;
+    };
+
+    window.mouse_button_callback = [stage](Window* window, int button, int action, int mods) {
+        stage->mouse.button = button;
+        if (action == GLFW_PRESS) {
+            stage->mouse.pressed = true;
+            stage->mouse.released = false;
+        }
+        if (action == GLFW_RELEASE) {
+            stage->mouse.pressed = false;
+            stage->mouse.released = true;
+        }
+    };
 }
 
 void Stage::Start() {
@@ -92,11 +123,16 @@ void Stage::Join() {
     update_thread.Join();
 }
 
-Scene* Stage::CreateScene(const std::string& name) {
-    Scene* s = new Scene(name);
+Scene* Stage::CreateScene(const std::string& name, Camera* main_camera) {
+    Scene* s = new Scene(name, main_camera);
     scenes.insert(std::make_pair(name, std::unique_ptr<Scene>(s)));
     return s;
 }
+
+Scene* Stage::CreateScene(const std::string& name) {
+    return CreateScene(name,  nullptr);
+}
+
 
 void Stage::DeleteScene(const std::string& name) {
     scenes.erase(name);

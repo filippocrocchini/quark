@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <functional>
 
 enum WindowStatus {
     WINDOW_NULL,
@@ -20,25 +21,25 @@ enum WindowStatus {
 
 class Window;
 
-typedef void(*ResizeCallback)(Window*, int, int);
-typedef void(*KeyCallback)(Window*, int, int, int, int);
-typedef void(*CharacterCallback)(Window*, unsigned int);
-typedef void(*CharacterWithModifierCallback)(Window*, unsigned int, int);
-typedef void(*CursorPositionCallback)(Window*, double, double);
-typedef void(*MouseButtonCallback)(Window*, int, int, int);
-typedef void(*ScrollCallback)(Window*, double, double);
+typedef std::function<void(Window*, int, int)> ResizeCallback;
+typedef std::function<void(Window*, int, int, int, int)> KeyCallback;
+typedef std::function<void(Window*, uint)> CharacterCallback;
+typedef std::function<void(Window*, uint, int)> CharacterWithModifierCallback;
+typedef std::function<void(Window*, double, double)> CursorPositionCallback;
+typedef std::function<void(Window*, int, int, int)> MouseButtonCallback;
+typedef std::function<void(Window*, double, double)> ScrollCallback;
 
 struct WindowConfiguration {
     std::string title = "Default window name";
-    unsigned width = 1280;
-    unsigned height = 720;
-    unsigned opengl_profile = GLFW_OPENGL_ANY_PROFILE;
-    unsigned antialiasing = 0;
-    unsigned opengl_major = 1;
-    unsigned opengl_minor = 1;
-    unsigned monitor = 0;
-    unsigned x_position = 0;
-    unsigned y_position = 0;
+    uint width = 1280;
+    uint height = 720;
+    uint opengl_profile = GLFW_OPENGL_ANY_PROFILE;
+    uint antialiasing = 0;
+    uint opengl_major = 1;
+    uint opengl_minor = 1;
+    uint monitor = 0;
+    uint x_position = 0;
+    uint y_position = 0;
 
     bool vsync = true;
     bool resizable = true;
@@ -73,8 +74,8 @@ class Window {
     void SwapBuffers();
 
     void SetTitle(const std::string& title);
-    void SetSize(unsigned width, unsigned height);
-    void SetPosition(unsigned x, unsigned y);
+    void SetSize(uint width, uint height);
+    void SetPosition(uint x, uint y);
 
     void Iconify();
     void Restore();
@@ -96,8 +97,8 @@ class Window {
     static Window* GetWindow(GLFWwindow*);
     static void Resize(GLFWwindow* handle, int width, int height);
     static void Key(GLFWwindow* handle, int key, int scancode, int action, int mods);
-    static void Character(GLFWwindow* handle, unsigned int codepoint);
-    static void CharacterMod(GLFWwindow* handle, unsigned int codepoint, int mods);
+    static void Character(GLFWwindow* handle, uint codepoint);
+    static void CharacterMod(GLFWwindow* handle, uint codepoint, int mods);
     static void CursorPos(GLFWwindow* handle, double x, double y);
     static void MouseButton(GLFWwindow* handle, int button, int action, int mods);
     static void Scroll(GLFWwindow* handle, double xoffset, double yoffset);

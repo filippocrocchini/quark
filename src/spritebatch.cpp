@@ -74,7 +74,6 @@ void SpriteBatch::AddSprite(const glm::vec4& color, Transform* transform) {
         return;
     matrix_buffer_mapping[sprite_count] = transform->GetMatrix2D();
 
-    glm::mat3 mat = transform->GetMatrix2D();
     color_buffer_mapping[sprite_count] = color;
     sprite_count++;
 }

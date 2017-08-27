@@ -9,7 +9,9 @@
 
 extern const char MENU_SCREEN_SCENE[];
 
+extern Camera menu_screen_camera;
+
 extern void loadMenuScreenResources();
-extern bool initMenuScreen();
+extern bool initMenuScreen(int width, int height);
 
 #endif  //NOLINT() MENU_SCREEN_H

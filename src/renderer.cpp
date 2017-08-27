@@ -22,13 +22,15 @@ void Renderer::SubmitSprite(Sprite* sprite, Transform* transform) {
     sprite_batches[material].AddSprite(sprite->color, transform);
 }
 
-void Renderer::RenderBatches() {
+void Renderer::RenderBatches(Camera* main_camera) {
+    if (main_camera == nullptr)
+        return;
     for (auto batch_pair = sprite_batches.begin(); batch_pair != sprite_batches.end(); batch_pair++) {
         if (!batch_pair->second.isEmpty()) {
             Shader* s = batch_pair->first->GetShader();
             Texture* texture = batch_pair->first->GetTexture();
             s->Bind();
-            s->SetUniform("u_projection", projection_matrix);
+            s->SetUniform("u_projection", main_camera->GetProjectionMatrix());
             s->SetUniform("u_color", batch_pair->first->GetDiffuseColor());
             if (texture != nullptr) {
                 texture->Bind(0);

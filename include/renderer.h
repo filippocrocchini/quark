@@ -12,19 +12,14 @@
 #include "./components.h"
 #include "./material.h"
 #include "./spritebatch.h"
+#include "./camera.h"
 
 class Renderer {
  public:
-    explicit Renderer(const glm::mat4& projection_matrix) : projection_matrix(projection_matrix) {}
-    Renderer() : Renderer(glm::mat4(1)) {}
-
     void SubmitSprite(Sprite* sprite, Transform* transform);
-    void SetProjection(const glm::mat4& projection_matrix) { this->projection_matrix = projection_matrix; }
-
-    void RenderBatches();
+    void RenderBatches(Camera* main_camera);
  private:
     std::map<Material*, SpriteBatch> sprite_batches;
-    glm::mat4 projection_matrix;
 };
 
 #endif  // NOLINT() RENDERER_H

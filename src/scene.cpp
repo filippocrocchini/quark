@@ -8,7 +8,8 @@
 #include <utility>
 #include <string>
 
-Scene::Scene(const std::string& name) : name(name) {}
+Scene::Scene(const std::string& name, Camera* main_camera) : name(name), main_camera(main_camera) {}
+Scene::Scene(const std::string& name) : Scene(name, nullptr) {}
 Scene::Scene() : Scene("Default Scene") {}
 
 GameObject* Scene::CreateGameObject(const std::string& name) {
