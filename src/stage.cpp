@@ -51,14 +51,13 @@ Stage::Stage(LoopController* controller, const std::string& name, uint width, ui
         return 0;
     });
     render_thread.SetOnLoop([stage]() {
-        if (stage->current_scene->main_camera == nullptr)
-            return;
-
-        stage->current_scene->main_camera->SetupContext();
-
-        if (stage->current_scene) {
-            stage->current_scene->Render(&(stage->renderer));
-            stage->renderer.RenderBatches(stage->current_scene->main_camera);
+        Scene* scene = stage->current_scene;
+        if (scene) {
+            if (scene->main_camera) {
+                scene->main_camera->SetupContext();
+                scene->Render(&(stage->renderer));
+                stage->renderer.RenderBatches(scene->main_camera);
+            }
         }
         stage->window.SwapBuffers();
     });

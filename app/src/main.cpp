@@ -5,6 +5,7 @@
 
 #include "./loading_screen.h"
 #include "./menu_screen.h"
+#include "./game_screen.h"
 
 const int WIDTH = 1080, HEIGHT = 720;
 int main() {
@@ -13,9 +14,9 @@ int main() {
     if (initLoadingScreen(WIDTH, HEIGHT)) {
         Quark::stage.SetCurrentScene(LOADING_SCREEN_SCENE);
         loadMenuScreenResources();
-        // loadGameResources();
+        loadGameResources();
         Quark::WaitForResources();
-        if (initMenuScreen(WIDTH, HEIGHT)) {
+        if (initMenuScreen(WIDTH, HEIGHT) && initGameScreen(WIDTH, HEIGHT)) {
             Quark::stage.SetCurrentScene(MENU_SCREEN_SCENE);
         }
     }

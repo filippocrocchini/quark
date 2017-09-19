@@ -5,18 +5,19 @@
 #ifndef COMPONENTS_H  // NOLINT()
 #define COMPONENTS_H
 
-#include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/glm.hpp>
 #include <cxxabi.h>
 
 #include <map>
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <functional>
 #include <utility>
 
-#include "./toggleable.h"
 #include "./material.h"
+#include "./toggleable.h"
 
 class GameObject;
 
@@ -101,6 +102,15 @@ class Sprite : public Component {
     explicit Sprite(glm::vec4 color) : material(nullptr), color(color) {}
 
     virtual ~Sprite() = default;
+};
+
+class Collider2D : public Component {
+ public:
+    Collider2D(std::function<void(Collider2D*)> on_collision, bool is_trigger): on_collision(on_collision), is_trigger(is_trigger) {}
+    explicit Collider2D(bool is_trigger): Collider2D([](Collider2D*){}, is_trigger) {}
+
+    std::function<void(Collider2D*)> on_collision;
+    bool is_trigger;
 };
 
 #endif  // NOLINT() COMPONENTS_H

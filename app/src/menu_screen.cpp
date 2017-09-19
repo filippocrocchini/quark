@@ -4,9 +4,6 @@
 
 #include "./menu_screen.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <SOIL2.h>
 
 #include <thread>  // NOLINT()
@@ -14,6 +11,7 @@
 #include <chrono>  // NOLINT()
 
 #include "./button.h"
+#include "./game_screen.h"
 
 
 class Dummy : public Resource {
@@ -53,7 +51,7 @@ bool initMenuScreen(int width, int height) {
 
     menu_screen_camera = Camera {glm::ortho(0.f, static_cast<float>(width), 0.f,
                                                  static_cast<float>(height), 0.f, 1000.f),
-                                 glm::vec3(.1f, .1f, .1f)};
+                                 glm::vec3(.05f, .05f, .05f)};
     Scene* menu_screen = Quark::stage.CreateScene(MENU_SCREEN_SCENE, &menu_screen_camera);
     Material* play_button_material = Quark::GetResource<Material>("play_button_material");
     if (menu_screen == nullptr || play_button_material == nullptr)
@@ -61,6 +59,6 @@ bool initMenuScreen(int width, int height) {
     menu_screen->CreateGameObject("play_button")->
         AddComponent<Transform>(glm::vec3(Quark::stage.GetWidth()/2-150, Quark::stage.GetHeight()/2-50, 0), glm::vec3(300, 100, 1), glm::quat())->
         AddComponent<Sprite>(play_button_material, glm::vec4(1, 1, 1, 1))->
-        AddComponent<Button>([](){ std::cout << "Play!\n"; });
+        AddComponent<Button>([](){ Quark::stage.SetCurrentScene(GAME_SCREEN_SCENE); });
     return true;
 }
